@@ -1,9 +1,11 @@
+import React from 'react'
+import Navbar from '../compments/navbar/Navbar'
+
+
 function Dashboard() {
-    return (
-        <>
-            <h1 className="text-3xl font-bold underline">This is dashboard</h1>
-        </>
-    )
+  return (
+    <div>Dashboard</div>
+  )
 }
 
-export default Dashboard;
+export default Dashboard

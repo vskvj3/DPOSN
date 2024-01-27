@@ -1,10 +1,11 @@
 import './App.css'
 import Pages from './pages/Pages'
+import React from 'react'
 
 function App() {
   return (
     <>
-      <Pages/>
+      <Pages />
       <h1>App</h1>
     </>
   )

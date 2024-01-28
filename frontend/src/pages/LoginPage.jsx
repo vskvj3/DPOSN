@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, React } from 'react'
 
 function LoginPage() {
   const [email, setEmail] = useState('')
@@ -26,7 +26,7 @@ function LoginPage() {
   return (
     <>
       <div className="grid place-content-center w-screen h-screen bg-cyan-950">
-        <div className="bg-white w-[26rem] h-[20rem] flex flex-col items-center rounded-lg outline outline-offset-2 outline-1">
+        <div className="bg-white w-[23rem] h-[20rem]  sm:w-[26rem] sm:h-[20rem]  flex flex-col items-center rounded-lg outline outline-offset-2 outline-1">
           <h1 className="mt-4 text-xl">Log in</h1>
 
           <form className="flex flex-col w-80 h-56 mt-8">

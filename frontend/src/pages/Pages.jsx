@@ -1,11 +1,15 @@
 import React from 'react'
 import Home from './Home'
+import Navbar from '../compments/navbar/Navbar'
+import LoginPage from './LoginPage'
+
+let logedIn = false
 
 function Pages() {
   return (
     <>
-      <Home />
-      <h1>pages</h1>
+      <Navbar />
+      {logedIn ? <Home /> : <LoginPage />}
     </>
   )
 }

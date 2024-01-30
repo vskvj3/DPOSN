@@ -1,16 +1,22 @@
 import { useState, React } from 'react'
 import Navbar from '../compments/navbar/Navbar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function LoginPage() {
   const [email, setEmail] = useState('')
   const [password1, setPassword1] = useState('')
   const [password2, setPassword2] = useState('')
 
+  const navigate = useNavigate()
+
   function handleSubmit(e) {
     e.preventDefault()
+
+    console.log('sadasd')
     setEmail('')
-    setPassword('')
+    setPassword1('')
+    setPassword2('')
+    navigate('/profilecreation')
   }
 
   function handleChange(e) {

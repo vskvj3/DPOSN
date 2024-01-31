@@ -26,10 +26,10 @@ function LoginPage() {
 
   return (
     <>
+      <Navbar />
       <div className="w-screen h-screen flex flex-col">
-        <Navbar />
-        <div className="grid place-content-center w-screen h-screen bg-cyan-950">
-          <div className="bg-white w-[23rem] h-[20rem]  sm:w-[26rem] sm:h-[20rem]  flex flex-col items-center rounded-lg outline outline-offset-2 outline-1">
+        <div className="grid place-content-center w-screen h-screen bg-gradient-to-r to-red-300 from-blue-300">
+          <div className="bg-white w-[23rem] h-[23rem]  sm:w-[26rem] sm:h-[23rem]  flex flex-col items-center rounded-lg shadow-xl">
             <h1 className="mt-4 text-xl">Log in</h1>
 
             <form className="flex flex-col w-80 h-56 mt-8 ">

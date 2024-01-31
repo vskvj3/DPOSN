@@ -45,8 +45,10 @@ function ProfileCreation() {
     switch (e.target.name) {
       case 'fname':
         setFname(e.target.value)
+        break
       case 'lname':
         setLname(e.target.value)
+        break
       case 'Day':
         setDay(e.target.value)
         break
@@ -55,8 +57,10 @@ function ProfileCreation() {
         break
       case 'Year':
         setYear(e.target.value)
+        break
       case 'gender':
         setGender(e.target.value)
+        break
       default:
         break
     }

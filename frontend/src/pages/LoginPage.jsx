@@ -1,5 +1,5 @@
 import { useState, React } from 'react'
-import Navbar from '../compments/navbar/Navbar'
+import Navbar from '../components/navbar/Navbar'
 import { Link } from 'react-router-dom'
 function LoginPage() {
   const [email, setEmail] = useState('')
@@ -51,7 +51,8 @@ function LoginPage() {
               ></input>
 
               <p className="mt-5">
-                Don't have an account? <Link to="/signup">Create account</Link>
+                Don&apos;t have an account?{' '}
+                <Link to="/signup">Create account</Link>
               </p>
 
               <button

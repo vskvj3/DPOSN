@@ -1,13 +1,15 @@
+import React from 'react'
 import { useState, useEffect } from 'react'
 import Navbar from '../components/navbar/Navbar'
 import { Link } from 'react-router-dom'
 
 function ProfilePage() {
-  const [user, setUser] = useState({fname:"sdfd",
-                                        lname: "xkdngwkdebng",
-                                        followers :[],
-                                        following :[]
-})
+  const [user, setUser] = useState({
+    fname: 'sdfd',
+    lname: 'xkdngwkdebng',
+    followers: [],
+    following: [],
+  })
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
@@ -20,7 +22,6 @@ function ProfilePage() {
     //   .catch(error => {
     //     console.log(error)
     //   })
-
     // Fetch posts data from the server
     // For example, using axios:
     // axios.get('/api/posts')
@@ -47,7 +48,9 @@ function ProfilePage() {
               src={user.profilePicture}
               alt="Profile"
             />
-            <h1 className="mt-4 text-xl">{user.fname} {user.lname}</h1>
+            <h1 className="mt-4 text-xl">
+              {user.fname} {user.lname}
+            </h1>
             <p className="mt-2 text-xs text-gray-500 h-3px">
               {user.followers.length} followers
             </p>

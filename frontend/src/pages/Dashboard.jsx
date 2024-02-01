@@ -9,7 +9,7 @@ function Dashboard() {
       <Navbar />
       <div className="w-full">
         <div className="fixed top-0 z-10 w-full bg-white"></div>
-        <div className="flex bg-gray-100 ">
+        <div className="flex bg-gray-300">
           <div className="flex-auto w-[20%] fixed top-12">
             <LeftSideBar />
           </div>

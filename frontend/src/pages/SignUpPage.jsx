@@ -71,7 +71,10 @@ function LoginPage() {
               ></input>
 
               <p className="mt-5">
-                Already have an account? <Link to="/login">Login here</Link>
+                Already have an account?{' '}
+                <Link className=" text-red-600" to="/login">
+                  Login here
+                </Link>
               </p>
               <button
                 className="h-10 bg-pink-600 mt-5 rounded-lg text-white"

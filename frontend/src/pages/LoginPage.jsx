@@ -52,7 +52,9 @@ function LoginPage() {
 
               <p className="mt-5">
                 Don&apos;t have an account?{' '}
-                <Link to="/signup">Create account</Link>
+                <Link className="text-red-600" to="/signup">
+                  Create account
+                </Link>
               </p>
 
               <button

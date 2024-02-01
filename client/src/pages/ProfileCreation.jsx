@@ -1,9 +1,16 @@
-import { useState, React } from 'react'
-import Navbar from '../compments/navbar/Navbar'
-import { Link } from 'react-router-dom'
+import { useState, React, useEffect } from 'react'
+import Navbar from '../components/navbar/Navbar'
+import Web3 from 'web3'
+import artifact from '../contracts/UserAuthentication.json'
+
+import { useLocation } from 'react-router-dom'
 
 function ProfileCreation() {
+  const location = useLocation()
+  const { email, password } = location.state
+
   const date = new Date()
+
   const months = [
     'Jan',
     'Feb',
@@ -18,12 +25,14 @@ function ProfileCreation() {
     'Nov',
     'Dec',
   ]
+
   const [fname, setFname] = useState('')
   const [lname, setLname] = useState('')
   const [day, setDay] = useState(date.getDate())
   const [month, setMonth] = useState(months[date.getMonth()])
   const [year, setYear] = useState(date.getFullYear())
-  const [gender, setGender] = useState('Select Gender')
+  const [gender, setGender] = useState('Male')
+
   const days = []
   const years = []
 
@@ -37,16 +46,51 @@ function ProfileCreation() {
 
   function handleSubmit(e) {
     e.preventDefault()
-    setEmail('')
-    setPassword('')
+
+    registerUser(email, password, fname, lname, day, month, year, gender)
+  }
+  useEffect(() => {
+    async function loadContract() {
+      const web3 = new Web3(window.ethereum)
+    }
+    loadContract()
+  }, [])
+
+  async function registerUser(
+    email,
+    password,
+    fname,
+    lname,
+    day,
+    month,
+    year,
+    gender
+  ) {
+    let dateOfBirth = `${day}/${month}/${year}`
+
+    const web3 = new Web3(window.ethereum)
+    const accounts = await web3.eth.requestAccounts()
+    const { abi } = artifact
+    const networkID = await web3.eth.net.getId()
+    const address = artifact.networks[networkID].address
+    const contract = new web3.eth.Contract(abi, address)
+
+    const account = accounts[0]
+    console.log(account, email, password, fname, lname, dateOfBirth, gender)
+
+    await contract.methods
+      .registerUser(account, email, password, fname, lname, dateOfBirth, gender)
+      .send({ from: account })
   }
 
   function handleChange(e) {
     switch (e.target.name) {
       case 'fname':
         setFname(e.target.value)
+        break
       case 'lname':
         setLname(e.target.value)
+        break
       case 'Day':
         setDay(e.target.value)
         break
@@ -55,6 +99,7 @@ function ProfileCreation() {
         break
       case 'Year':
         setYear(e.target.value)
+        break
       case 'gender':
         setGender(e.target.value)
       default:

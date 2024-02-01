@@ -1,5 +1,5 @@
 import { useState, React } from 'react'
-import Navbar from '../compments/navbar/Navbar'
+import Navbar from '../components/navbar/Navbar'
 import { Link, useNavigate } from 'react-router-dom'
 
 function LoginPage() {
@@ -12,11 +12,15 @@ function LoginPage() {
   function handleSubmit(e) {
     e.preventDefault()
 
-    console.log('sadasd')
+    const _email = email
+    const _password = password1
+
     setEmail('')
     setPassword1('')
     setPassword2('')
-    navigate('/profilecreation')
+    navigate('/profilecreation', {
+      state: { email: _email, password: _password },
+    })
   }
 
   function handleChange(e) {

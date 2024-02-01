@@ -40,53 +40,57 @@ function LoginPage() {
   }
 
   return (
-    <div className="w-screen h-screen flex flex-col">
+    <>
       <Navbar />
-      <div className="grid place-content-center w-full h-full bg-cyan-950">
-        <div className="bg-white w-[23rem] h-[23rem]  sm:w-[26rem] sm:h-[23rem]  flex flex-col items-center rounded-lg outline outline-offset-2 outline-1">
-          <h1 className="mt-4 text-xl">Sign Up</h1>
+      <div className="w-screen h-screen flex flex-col">
+        <div className="grid place-content-center w-full h-full  bg-gradient-to-r to-red-300 from-blue-300">
+          <div className="bg-white w-[23rem] h-[26rem]  sm:w-[26rem] sm:h-[26rem]  flex flex-col items-center rounded-lg shadow-xl">
+            <h1 className="mt-4 text-xl">Sign Up</h1>
 
-          <form className="flex flex-col w-80 h-64 mt-8 ">
-            <input
-              className="h-10 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
-              placeholder="Email"
-              type="email"
-              value={email}
-              name="email"
-              onChange={handleChange}
-            ></input>
-            <input
-              className="h-10 mt-4 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
-              placeholder="Password"
-              type="password"
-              value={password1}
-              name="password1"
-              onChange={handleChange}
-            ></input>
+            <form className="flex flex-col w-80 h-64 mt-8 ">
+              <input
+                className="h-10 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
+                placeholder="Email"
+                type="email"
+                value={email}
+                name="email"
+                onChange={handleChange}
+              ></input>
+              <input
+                className="h-10 mt-4 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
+                placeholder="Password"
+                type="password"
+                value={password1}
+                name="password1"
+                onChange={handleChange}
+              ></input>
 
-            <input
-              className="h-10 mt-4 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
-              placeholder="Confirm Password"
-              type="password"
-              value={password2}
-              name="password2"
-              onChange={handleChange}
-            ></input>
+              <input
+                className="h-10 mt-4 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
+                placeholder="Confirm Password"
+                type="password"
+                value={password2}
+                name="password2"
+                onChange={handleChange}
+              ></input>
 
-            <p className="mt-5">
-              Already have an account? <Link to="/login">Login here</Link>
-            </p>
-
-            <button
-              className="h-10 bg-pink-600 mt-5 rounded-lg text-white"
-              onClick={handleSubmit}
-            >
-              Sign Up
-            </button>
-          </form>
+              <p className="mt-5">
+                Already have an account?{' '}
+                <Link className=" text-red-600" to="/login">
+                  Login here
+                </Link>
+              </p>
+              <button
+                className="h-10 bg-pink-600 mt-5 rounded-lg text-white"
+                onClick={handleSubmit}
+              >
+                Sign Up
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

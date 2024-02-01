@@ -29,7 +29,7 @@ function LoginPage() {
       <Navbar />
       <div className="w-screen h-screen flex flex-col">
         <div className="grid place-content-center w-screen h-screen bg-gradient-to-r to-red-300 from-blue-300">
-          <div className="bg-white w-[23rem] h-[23rem]  sm:w-[26rem] sm:h-[23rem]  flex flex-col items-center rounded-lg shadow-xl">
+          <div className="bg-white w-[23rem] h-[26rem]  sm:w-[26rem] sm:h-[26rem]  flex flex-col items-center rounded-lg shadow-xl">
             <h1 className="mt-4 text-xl">Log in</h1>
 
             <form className="flex flex-col w-80 h-56 mt-8 ">
@@ -52,7 +52,9 @@ function LoginPage() {
 
               <p className="mt-5">
                 Don&apos;t have an account?{' '}
-                <Link to="/signup">Create account</Link>
+                <Link className="text-red-600" to="/signup">
+                  Create account
+                </Link>
               </p>
 
               <button

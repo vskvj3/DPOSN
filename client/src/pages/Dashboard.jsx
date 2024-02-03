@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from '../components/navbar/Navbar'
 import LeftSideBar from '../components/Dashboard/LeftSideBar'
 import RightSideBar from '../components/Dashboard/RightSideBar'
+import MainSection from '../components/Dashboard/MainSection'
 
 function Dashboard() {
   return (
@@ -16,7 +17,7 @@ function Dashboard() {
 
           {/* CENTER */}
           <div className="flex-1 h-full px-4 flex flex-col gap-6 overflow-y-auto rounded-lg">
-            center
+            <MainSection />
           </div>
 
           {/* RIGHT */}

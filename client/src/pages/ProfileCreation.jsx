@@ -5,50 +5,62 @@ import artifact from '../contracts/UserAuthentication.json'
 
 import { useLocation } from 'react-router-dom'
 
+const date = new Date()
+
+const months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+]
+
+const days = []
+const years = []
+
+for (let i = 1; i <= 31; i++) {
+  days.push(i)
+}
+
+for (let i = date.getFullYear(); i >= 1905; i--) {
+  years.push(i)
+}
+
 function ProfileCreation() {
   const location = useLocation()
-  const { email, password } = location.state
 
-  const date = new Date()
-
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ]
-
-  const [fname, setFname] = useState('')
-  const [lname, setLname] = useState('')
-  const [day, setDay] = useState(date.getDate())
-  const [month, setMonth] = useState(months[date.getMonth()])
-  const [year, setYear] = useState(date.getFullYear())
-  const [gender, setGender] = useState('Male')
-
-  const days = []
-  const years = []
-
-  for (let i = 1; i <= 31; i++) {
-    days.push(i)
+  if (location.state != null) {
+    const { email, password } = location.state
   }
 
-  for (let i = date.getFullYear(); i >= 1905; i--) {
-    years.push(i)
-  }
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
+    day: date.getDate(),
+    month: months[date.getMonth()],
+    year: date.getFullYear(),
+    gender: 'Male',
+  })
 
   function handleSubmit(e) {
     e.preventDefault()
-
-    registerUser(email, password, fname, lname, day, month, year, gender)
+    registerUser(email, password, form)
   }
+
+  function handleChange(e) {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    })
+  }
+
   useEffect(() => {
     async function loadContract() {
       const web3 = new Web3(window.ethereum)
@@ -56,17 +68,8 @@ function ProfileCreation() {
     loadContract()
   }, [])
 
-  async function registerUser(
-    email,
-    password,
-    fname,
-    lname,
-    day,
-    month,
-    year,
-    gender
-  ) {
-    let dateOfBirth = `${day}/${month}/${year}`
+  async function registerUser(email, password, form) {
+    let dateOfBirth = `${form.day}/${form.month}/${form.year}`
 
     const web3 = new Web3(window.ethereum)
     const accounts = await web3.eth.requestAccounts()
@@ -76,35 +79,28 @@ function ProfileCreation() {
     const contract = new web3.eth.Contract(abi, address)
 
     const account = accounts[0]
-    console.log(account, email, password, fname, lname, dateOfBirth, gender)
+
+    // console.log(
+    //   account,
+    //   email,
+    //   password,
+    //   form.firstName,
+    //   form.lastName,
+    //   dateOfBirth,
+    //   form.gender
+    // )
 
     await contract.methods
-      .registerUser(account, email, password, fname, lname, dateOfBirth, gender)
+      .registerUser(
+        account,
+        email,
+        password,
+        form.firstName,
+        form.lastName,
+        dateOfBirth,
+        form.gender
+      )
       .send({ from: account })
-  }
-
-  function handleChange(e) {
-    switch (e.target.name) {
-      case 'fname':
-        setFname(e.target.value)
-        break
-      case 'lname':
-        setLname(e.target.value)
-        break
-      case 'Day':
-        setDay(e.target.value)
-        break
-      case 'Month':
-        setMonth(e.target.value)
-        break
-      case 'Year':
-        setYear(e.target.value)
-        break
-      case 'gender':
-        setGender(e.target.value)
-      default:
-        break
-    }
   }
 
   return (
@@ -119,25 +115,25 @@ function ProfileCreation() {
               <input
                 className="h-10 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
                 placeholder="First Name"
-                type="name"
-                value={fname}
-                name="fname"
+                type="firstName"
+                value={form.firstName}
+                name="firstName"
                 onChange={handleChange}
               ></input>
               <input
                 className="h-10 mt-4 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
                 placeholder="Last Name"
-                type="name"
-                value={lname}
-                name="lname"
+                type="lastName"
+                value={form.lastName}
+                name="lastName"
                 onChange={handleChange}
               ></input>
               <p className="mt-2 text-xs text-gray-500 h-3px">Date of birth</p>
               <div className="flex flex-row mt-1">
                 <select
                   className="w-1/4 mr-1 h-10 text-sm border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
-                  name="Day"
-                  value={day}
+                  name="day"
+                  value={form.day}
                   onChange={handleChange}
                 >
                   {days.map((val) => (
@@ -146,8 +142,8 @@ function ProfileCreation() {
                 </select>
                 <select
                   className="w-1/4 mr-1 h-10 text-sm border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
-                  name="Month"
-                  value={month}
+                  name="month"
+                  value={form.month}
                   onChange={handleChange}
                 >
                   {months.map((val) => (
@@ -156,8 +152,8 @@ function ProfileCreation() {
                 </select>
                 <select
                   className="w-1/2 h-10 text-sm  border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
-                  name="Year"
-                  value={year}
+                  name="year"
+                  value={form.year}
                   onChange={handleChange}
                 >
                   {years.map((val) => (
@@ -171,7 +167,7 @@ function ProfileCreation() {
               <select
                 className="h-10 mt-1 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
                 type="gender"
-                value={gender}
+                value={form.gender}
                 name="gender"
                 onChange={handleChange}
               >

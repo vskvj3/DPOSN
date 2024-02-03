@@ -6,29 +6,29 @@ function FeedSection() {
   return (
     <div className="flex flex-col items-center p-6">
       <div className="flex flex-col py-4 w-full bg-white rounded-3xl shadow-lg">
-        <div className="flex items-center border-b-2 border-gray-300 pb-4 pl-4 w-full">
-          <div>
-            <Avatar
-              src="https://docs.material-tailwind.com/img/face-2.jpg"
-              alt="avatar"
-              size="sm"
-            />
-          </div>
-
+        <div className="flex items-center border-gray-300 pb-4 pl-4 w-full">
           <form className="w-full">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between">
               <div className="w-full mx-4">
-                <input
-                  className="outline-none w-full bg-slate-400 rounded-md"
-                  name="text"
-                  type="text"
-                />
-                <div className="mx-4 ">{/* put preview */}</div>
-                <div className="mr-4">
-                  <Button variant="text" type="submit">
-                    Share
-                  </Button>
+                <div className="flex justify-around">
+                  <Avatar
+                    className="self-center"
+                    src="https://docs.material-tailwind.com/img/face-2.jpg"
+                    alt="avatar"
+                    size="sm"
+                  />
+                  <textarea
+                    className="outline-none w-full ml-3 pl-4  py-4 placeholder-gray-500  bg-slate-200 rounded-xl"
+                    name="text"
+                    type="text"
+                    placeholder="Share something!"
+                  />
                 </div>
+              </div>
+              <div className="self-center bg-slate-200 mr-4 rounded-md">
+                <Button color="amber" variant="text" type="submit">
+                  Share
+                </Button>
               </div>
             </div>
           </form>

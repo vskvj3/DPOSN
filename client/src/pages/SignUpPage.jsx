@@ -41,10 +41,10 @@ function LoginPage() {
 
   return (
     <>
-      <Navbar />
-      <div className="w-screen h-screen flex flex-col">
-        <div className="grid place-content-center w-full h-full  bg-gradient-to-r to-red-300 from-blue-300">
-          <div className="bg-white w-[23rem] h-[26rem]  sm:w-[26rem] sm:h-[26rem]  flex flex-col items-center rounded-lg shadow-xl">
+      <div className="w-screen h-screen bg-gradient-to-r to-red-300 from-slate-300 overflow-hidden">
+        <Navbar />
+        <div className="grid place-content-center h-full">
+          <div className="bg-white w-[23rem] h-[26rem]  sm:w-[26rem] sm:h-[26rem]  flex flex-col items-center  place-content-center rounded-lg shadow-xl">
             <h1 className="mt-4 text-xl">Sign Up</h1>
 
             <form className="flex flex-col w-80 h-64 mt-8 ">

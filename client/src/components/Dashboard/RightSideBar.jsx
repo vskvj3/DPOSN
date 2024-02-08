@@ -5,7 +5,7 @@ import NoProfile from '/src/assets/images/userprofile.png'
 function RightSideBar() {
   return (
     <div>
-      <div className="w-full bg-slate-500 shadow-sm rounded-lg px-6 py-5">
+      <div className="w-full bg-white shadow-xl rounded-lg px-6 py-5">
         <div className="flex items-center justify-between text-xl pb-2 border-b border-[#66666645]">
           <span> Friend Request</span>
           <span>{requests?.length}</span>

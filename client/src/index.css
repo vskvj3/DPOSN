@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body,
+html {
+  font-family: Roboto, Helvetica, sans-serif;
+}
 
 @layer base {
     :root {

@@ -15,7 +15,7 @@ function PostCard({ post, user, deletePost, likePost }) {
 
   return (
     <div>
-      <div className="mb-2 bg-primary p-4 rounded-xl">
+      <div className="mb-2 bg-primary p-4 rounded-xl shadow-xl">
         <div className="flex gap-3 items-center mb-2">
           <img
             src={post?.userId?.profileUrl ?? NoProfile}

@@ -26,8 +26,8 @@ function LoginPage() {
 
   return (
     <>
-      <div className="w-screen h-screen bg-gradient-to-r to-red-300 from-slate-300 overflow-hidden">  
-      <Navbar />
+      <div className="w-screen h-screen bg-gradient-to-r to-red-300 from-slate-300 overflow-hidden">
+        <Navbar />
         <div className="grid place-content-center h-full">
           <div className="bg-white w-[23rem] h-[26rem]  sm:w-[26rem] sm:h-[26rem]  flex flex-col items-center  place-content-center rounded-lg shadow-xl">
             <h1 className="mt-4 text-xl">Log in</h1>

@@ -2,7 +2,7 @@ import React from 'react'
 import Home from './Home'
 import Dashboard from './Dashboard'
 
-let logedIn = true
+let logedIn = false
 
 function Pages() {
   return <>{logedIn ? <Dashboard /> : <Home />}</>

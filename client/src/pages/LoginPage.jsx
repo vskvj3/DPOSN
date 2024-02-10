@@ -1,5 +1,5 @@
 import { useState, React } from 'react'
-import Navbar from '../components/navbar/Navbar'
+import Navbar from '../components/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 function LoginPage() {
   const [email, setEmail] = useState('')

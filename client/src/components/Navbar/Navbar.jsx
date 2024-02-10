@@ -1,6 +1,7 @@
 import React from 'react'
-import NavbarLinks from './NavbarLinks'
 import UserLinks from './UserLinks'
+import Hamburger from './Hamburger'
+import './index.css'
 
 function Navbar() {
   return (
@@ -8,12 +9,11 @@ function Navbar() {
       <div className="text-3xl text-gray-900 dark:text-white font-roboto">
         <span className="text-black">DPOSN</span>
       </div>
-
-      <div className="hidden md:flex justify-center item-center ">
-        <NavbarLinks />
-      </div>
       <div className="hidden md:flex justify-center item-center ">
         <UserLinks />
+      </div>
+      <div className="flex md:hidden justify-center item-center">
+        <Hamburger />
       </div>
     </div>
   )

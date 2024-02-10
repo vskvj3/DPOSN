@@ -3,7 +3,7 @@ import ProfileCard from './ProfileCard'
 
 function LeftSideBar() {
   return (
-    <div>
+    <div className="w-full pl-6 py-5">
       <ProfileCard />
     </div>
   )

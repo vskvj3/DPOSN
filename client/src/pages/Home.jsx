@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from '../components/navbar/Navbar'
+import Navbar from '../components/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 
 function Home() {
@@ -9,7 +9,7 @@ function Home() {
         <Navbar />
         <div className="grid place-content-center h-full">
           <div className="bg-white w-[23rem] h-[26rem]  sm:w-[26rem] sm:h-[26rem]  flex flex-col items-center place-content-center rounded-lg shadow-xl">
-            <h1 className="mt-4 text-xl">
+            <h1 className=" my-16 text-4xl">
               <span className="text-transparent bg-clip-text bg-gradient-to-r to-red-600 from-slate-600">
                 DPOSN
               </span>

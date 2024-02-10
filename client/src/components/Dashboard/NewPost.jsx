@@ -2,10 +2,12 @@ import React from 'react'
 import { BiImages } from 'react-icons/bi'
 import NoProfile from '../../assets/images/userprofile.png'
 import { user } from '../../assets/tempdata'
-import TextInput from './TextInput'
 import CustomButton from './CustomButton'
+import { useState } from 'react'
 
 function NewPost() {
+  const [file, setFile] = useState(null)
+
   return (
     <div className="pb-2">
       <form

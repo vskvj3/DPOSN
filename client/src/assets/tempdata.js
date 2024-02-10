@@ -115,35 +115,6 @@ export const friends = [
   },
 ]
 
-export const requests = [
-  {
-    _id: '64df3aec4180b81adfe41d32',
-    requestFrom: friends[0],
-  },
-  {
-    _id: '64df39704180b81adfe41d0b',
-    requestFrom: friends[1],
-  },
-  {
-    _id: '64df424b4a4c0d47b5369f65',
-    requestFrom: friends[2],
-  },
-]
-
-export const suggest = [
-  {
-    _id: '64df3aec4180b81adfe41d32',
-    ...friends[0],
-  },
-  {
-    _id: '64df39704180b81adfe41d0b',
-    ...friends[1],
-  },
-  {
-    _id: '64df424b4a4c0d47b5369f65',
-    ...friends[2],
-  },
-]
 export const posts = [
   {
     _id: '64e2fe620d7868ecff1a6a86',

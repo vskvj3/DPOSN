@@ -14,7 +14,9 @@ let user = {
 
 function ProfileCard() {
   return (
+    /* Rainbow border */
     <div className="w-full rounded-xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
+      {/* Actual Component */}
       <div className="w-full bg-primary flex flex-col items-center rounded-xl px-6 py-4">
         {/* Profile Badge */}
         <div className="w-full flex items-center justify-between border-b pb-5 border-[#66666645]">

@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from '../components/navbar/Navbar'
+import Navbar from '../components/Navbar/Navbar'
 import LeftSideBar from '../components/Dashboard/LeftSideBar'
 import RightSideBar from '../components/Dashboard/RightSideBar'
 import MainSection from '../components/Dashboard/MainSection'
@@ -21,7 +21,7 @@ function Dashboard() {
           </div>
 
           {/* RIGHT */}
-          <div className="hidden w-1/4 h-full lg:flex flex-col gap-8 overflow-y-auto">
+          <div className="hidden w-1/3 lg:w-1/4 h-full lg:flex flex-col gap-8 overflow-y-auto">
             <RightSideBar />
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { useState, React, useEffect } from 'react'
-import Navbar from '../components/navbar/Navbar'
+import Navbar from '../components/Navbar/Navbar'
 import Web3 from 'web3'
 import artifact from '../contracts/UserAuthentication.json'
 

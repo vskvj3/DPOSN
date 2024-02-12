@@ -1,10 +1,9 @@
-import { useState, React, useEffect, useContext } from 'react'
+import { useState, React, useEffect } from 'react'
 import Navbar from '../components/Navbar/Navbar'
+import Web3 from 'web3'
+import artifact from '../contracts/UserAuthentication.json'
 
 import { useLocation } from 'react-router-dom'
-import EthContext from '../contexts/EthContext'
-
-import Web3 from 'web3'
 
 const date = new Date()
 
@@ -84,17 +83,17 @@ function ProfileCreation() {
     //   form.gender
     // )
 
-    await contract.methods
+    const resp = await contract.methods
       .registerUser(
-        accounts[0],
-        Web3.utils.padRight(Web3.utils.asciiToHex(email), 64),
-        Web3.utils.padRight(Web3.utils.asciiToHex(password), 64),
-        Web3.utils.padRight(Web3.utils.asciiToHex(form.firstName), 64),
-        Web3.utils.padRight(Web3.utils.asciiToHex(form.lastName), 64),
-        Web3.utils.padRight(Web3.utils.asciiToHex(dateOfBirth), 64),
-        Web3.utils.padRight(Web3.utils.asciiToHex(form.gender), 64)
+        account,
+        email,
+        password,
+        form.firstName,
+        form.lastName,
+        dateOfBirth,
+        form.gender
       )
-      .send({ from: accounts[0] })
+      .send({ from: account })
   }
 
   return (

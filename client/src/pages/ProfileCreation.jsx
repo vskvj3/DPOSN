@@ -1,9 +1,8 @@
-import { useState, React, useEffect } from 'react'
-import Navbar from '../components/Navbar/Navbar'
-import Web3 from 'web3'
-import artifact from '../contracts/UserAuthentication.json'
+import { useState, React, useEffect, useContext } from 'react'
+import Navbar from '../components/navbar/Navbar'
 
 import { useLocation } from 'react-router-dom'
+import EthContext from '../contexts/EthContext'
 
 const date = new Date()
 
@@ -36,9 +35,11 @@ for (let i = date.getFullYear(); i >= 1905; i--) {
 function ProfileCreation() {
   const location = useLocation()
 
-  if (location.state != null) {
-    const { email, password } = location.state
-  }
+  const {
+    state: { contract, accounts },
+  } = useContext(EthContext)
+
+  const { email, password } = location.state
 
   const [form, setForm] = useState({
     firstName: '',
@@ -61,24 +62,15 @@ function ProfileCreation() {
     })
   }
 
-  useEffect(() => {
-    async function loadContract() {
-      const web3 = new Web3(window.ethereum)
-    }
-    loadContract()
-  }, [])
+  // useEffect(() => {
+  //   async function loadContract() {
+  //     const web3 = new Web3(window.ethereum)
+  //   }
+  //   loadContract()
+  // }, [])
 
   async function registerUser(email, password, form) {
     let dateOfBirth = `${form.day}/${form.month}/${form.year}`
-
-    const web3 = new Web3(window.ethereum)
-    const accounts = await web3.eth.requestAccounts()
-    const { abi } = artifact
-    const networkID = await web3.eth.net.getId()
-    const address = artifact.networks[networkID].address
-    const contract = new web3.eth.Contract(abi, address)
-
-    const account = accounts[0]
 
     // console.log(
     //   account,
@@ -90,9 +82,9 @@ function ProfileCreation() {
     //   form.gender
     // )
 
-    await contract.methods
+    const resp = await contract.methods
       .registerUser(
-        account,
+        accounts[0],
         email,
         password,
         form.firstName,
@@ -100,7 +92,9 @@ function ProfileCreation() {
         dateOfBirth,
         form.gender
       )
-      .send({ from: account })
+      .send({ from: accounts[0] })
+
+    console.log(resp.toString())
   }
 
   return (

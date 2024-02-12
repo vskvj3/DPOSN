@@ -1,9 +1,15 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Navbar from '../components/Navbar/Navbar'
 import { Link } from 'react-router-dom'
+import EthContext from '../contexts/EthContext'
 
+import Web3 from 'web3'
 function ProfilePage() {
+  const {
+    state: { contract, accounts },
+  } = useContext(EthContext)
+
   const [user, setUser] = useState({
     fname: 'sdfd',
     lname: 'xkdngwkdebng',
@@ -12,26 +18,25 @@ function ProfilePage() {
   })
   const [posts, setPosts] = useState([])
 
+  async function init() {
+    const data = await contract.methods
+      .getUser(accounts[0])
+      .call({ from: accounts[0] })
+    return data
+  }
+
   useEffect(() => {
-    // Fetch user data from the server
-    // For example, using axios:
-    // axios.get('/api/user')
-    //   .then(response => {
-    //     setUser(response.data)
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
-    // Fetch posts data from the server
-    // For example, using axios:
-    // axios.get('/api/posts')
-    //   .then(response => {
-    //     setPosts(response.data)
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
-  }, [])
+    if (contract != null) {
+      const userData = init()
+      userData.then((data) => {
+        setUser({
+          ...user,
+          fname: Web3.utils.hexToAscii(data.firstName).replace(/\0.*$/g, ''),
+          lname: Web3.utils.hexToAscii(data.lastName).replace(/\0.*$/g, ''),
+        })
+      })
+    }
+  }, [contract])
 
   if (!user) {
     return <div>User Data Not Found...</div>

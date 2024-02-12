@@ -4,61 +4,46 @@ pragma solidity >=0.4.22 <0.9.0;
 contract UserAuthentication {
     struct userData {
         address userAddress;
-        string email;
-        string password;
-        string firstName;
-        string lastName;
-        string dateOfBirth;
-        string gender;
+        bytes email;
+        bytes32 password;
+        bytes32 firstName;
+        bytes32 lastName;
+        bytes32 dateOfBirth;
+        bytes32 gender;
     }
 
     mapping(address => userData) accounts;
 
     function registerUser(
         address _userAddress,
-        string memory _email,
-        string memory _password,
-        string memory _firstName,
-        string memory _lastName,
-        string memory _dateOfBirth,
-        string memory _gender
+        bytes calldata _email,
+        bytes32 _password,
+        bytes32 _firstName,
+        bytes32 _lastName,
+        bytes32 _dateOfBirth,
+        bytes32 _gender
     ) public {
-        require(accounts[_userAddress].userAddress != msg.sender);
-        accounts[_userAddress].userAddress = _userAddress;
-        accounts[_userAddress].email = _email;
-        accounts[_userAddress].password = _password;
-        accounts[_userAddress].firstName = _firstName;
-        accounts[_userAddress].lastName = _lastName;
-        accounts[_userAddress].dateOfBirth = _dateOfBirth;
-        accounts[_userAddress].gender = _gender;
+        require(
+            accounts[_userAddress].userAddress != msg.sender,
+            "User already registered"
+        );
+        accounts[msg.sender] = userData({
+            userAddress: msg.sender,
+            email: _email,
+            password: _password,
+            firstName: _firstName,
+            lastName: _lastName,
+            dateOfBirth: _dateOfBirth,
+            gender: _gender
+        });
     }
 
-    function loginUser(
-        address _userAddress,
-        string memory _email,
-        string memory _password
-    )
-        public
-        view
-        returns (
-            string memory _firstName,
-            string memory _lastName,
-            string memory _dateOfBirth,
-            string memory _gender
-        )
-    {
-        bool isUserRegistered = ((accounts[_userAddress].userAddress ==
-            msg.sender) &&
-            (keccak256(abi.encodePacked(accounts[_userAddress].email)) ==
-                keccak256(abi.encodePacked(_email))) &&
-            (keccak256(abi.encodePacked(accounts[_userAddress].password)) ==
-                keccak256(abi.encodePacked(_password))));
-        require(isUserRegistered == true);
-        return (
-            accounts[_userAddress].firstName,
-            accounts[_userAddress].lastName,
-            accounts[_userAddress].dateOfBirth,
-            accounts[_userAddress].gender
-        );
+    function getUser() public view returns (userData memory) {
+        return accounts[msg.sender];
+    }
+
+    function loginUser() public view returns (bytes memory, bytes32) {
+        userData memory user = accounts[msg.sender];
+        return (user.email, user.password);
     }
 }

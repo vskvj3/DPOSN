@@ -9,7 +9,7 @@ function NewPost() {
   const [file, setFile] = useState(null)
 
   return (
-    <div className="pb-2">
+    <div className="pb-2 sticky">
       <form
         onSubmit={console.log('submit')}
         className="bg-primary px-4 rounded-xl shadow-xl w-full"
@@ -39,6 +39,7 @@ function NewPost() {
               type="submit"
               title="Post"
               containerStyles="bg-[#0444a4] text-white py-1 px-6 rounded-md font-semibold text-sm"
+              onClick={() => console.log('post')}
             />
           </div>
 

@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import NoProfile from '../../assets/images/userprofile.png'
 import moment from 'moment'
-
+import PropTypes from 'prop-types'
+import { postComments } from '../../assets/tempdata'
 import { BiComment, BiLike, BiSolidLike } from 'react-icons/bi'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
 
 function PostCard({ post, user, deletePost, likePost }) {
   const [showAll, setShowAll] = useState(0)
-  const [showReply, setShowReply] = useState(0)
+  // const [showReply, setShowReply] = useState(0)
   const [comments, setComments] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [replyComments, setReplyComments] = useState(0)
+  // const [loading, setLoading] = useState(false)
+  // const [replyComments, setReplyComments] = useState(0)
   const [showComments, setShowComments] = useState(0)
 
   return (
@@ -86,8 +87,9 @@ function PostCard({ post, user, deletePost, likePost }) {
           <p
             className="flex gap-2 items-center text-base cursor-pointer"
             onClick={() => {
-              //   setShowComments(showComments === post._id ? null : post._id)
+              setShowComments(showComments === post._id ? null : post._id)
               //   getComments(post?._id)
+              setComments(postComments)
             }}
           >
             <BiComment size={20} />
@@ -104,9 +106,36 @@ function PostCard({ post, user, deletePost, likePost }) {
             </div>
           )}
         </div>
+
+        {/* Comments  */}
+        {showComments === post?._id &&
+          comments?.map((comment) => (
+            <div key={comment?._id} className="flex gap-2 items-center mt-2">
+              <img
+                src={comment?.userId?.profileUrl ?? NoProfile}
+                alt={comment?.userId?.firstName}
+                className="w-10 h-10 object-cover rounded-full"
+              />
+              <div>
+                <p className="text-base font-medium text-ascent-1">
+                  {comment?.userId?.firstName} {comment?.userId?.lastName}
+                </p>
+                <span className="text-sm text-ascent-2">
+                  {comment?.comment}
+                </span>
+              </div>
+            </div>
+          ))}
       </div>
     </div>
   )
+}
+
+PostCard.propTypes = {
+  post: PropTypes.object,
+  user: PropTypes.object,
+  deletePost: PropTypes.func,
+  likePost: PropTypes.func,
 }
 
 export default PostCard

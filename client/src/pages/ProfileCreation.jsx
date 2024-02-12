@@ -1,5 +1,5 @@
 import { useState, React, useEffect, useContext } from 'react'
-import Navbar from '../components/navbar/Navbar'
+import Navbar from '../components/Navbar/Navbar'
 
 import { useLocation } from 'react-router-dom'
 import EthContext from '../contexts/EthContext'
@@ -93,8 +93,6 @@ function ProfileCreation() {
         form.gender
       )
       .send({ from: accounts[0] })
-
-    console.log(resp.toString())
   }
 
   return (

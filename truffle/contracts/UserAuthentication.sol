@@ -33,6 +33,12 @@ contract UserAuthentication {
         accounts[_userAddress].gender = _gender;
     }
 
+    function getUser(
+        address userAddress
+    ) public view returns (userData memory) {
+        return accounts[userAddress];
+    }
+
     function loginUser(
         address _userAddress,
         string memory _email,

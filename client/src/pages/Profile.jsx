@@ -3,6 +3,8 @@ import { useState, useEffect, useContext } from 'react'
 import Navbar from '../components/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 import EthContext from '../contexts/EthContext'
+
+import Web3 from 'web3'
 function ProfilePage() {
   const {
     state: { contract, accounts },
@@ -27,7 +29,11 @@ function ProfilePage() {
     if (contract != null) {
       const userData = init()
       userData.then((data) => {
-        setUser({ ...user, fname: data.firstName, lname: data.lastName })
+        setUser({
+          ...user,
+          fname: Web3.utils.hexToAscii(data.firstName).replace(/\0.*$/g, ''),
+          lname: Web3.utils.hexToAscii(data.lastName).replace(/\0.*$/g, ''),
+        })
       })
     }
   }, [contract])

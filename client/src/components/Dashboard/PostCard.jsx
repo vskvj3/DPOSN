@@ -12,7 +12,7 @@ function PostCard({ post, user, deletePost, likePost }) {
   const [comments, setComments] = useState([])
   // const [loading, setLoading] = useState(false)
   // const [replyComments, setReplyComments] = useState(0)
-  const [showComments, setShowComments] = useState(0)
+  const [showComments, setShowComments] = useState(false)
 
   return (
     <div>
@@ -87,7 +87,7 @@ function PostCard({ post, user, deletePost, likePost }) {
           <p
             className="flex gap-2 items-center text-base cursor-pointer"
             onClick={() => {
-              setShowComments(showComments === post._id ? null : post._id)
+              setShowComments(showComments ? false : true)
               //   getComments(post?._id)
               setComments(postComments)
             }}
@@ -108,7 +108,7 @@ function PostCard({ post, user, deletePost, likePost }) {
         </div>
 
         {/* Comments  */}
-        {showComments === post?._id &&
+        {showComments === true &&
           comments?.map((comment) => (
             <div key={comment?._id} className="flex gap-2 items-center mt-2">
               <img

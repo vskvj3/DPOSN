@@ -8873,12 +8873,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xc8F2B6dB836d78A34c46C9454aD718948E434B52",
-      "transactionHash": "0x9891a159d5fe3e1ca63e207d721f3d7c6fb0f6e9feacd190b3aab5540c445852"
+      "address": "0x066FF6e2259e2dA04f0a3011Efed7D78dFD9B852",
+      "transactionHash": "0x8d9d06ff7b66750162ea77f4b4446da67e6acb90b3bb269bd92a78c24032d6a5"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-02-12T15:42:52.110Z",
+  "updatedAt": "2024-02-13T15:53:40.425Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

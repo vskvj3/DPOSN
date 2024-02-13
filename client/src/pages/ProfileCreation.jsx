@@ -1,8 +1,9 @@
-import { useState, React, useEffect, useContext } from 'react'
+import { useState, React, useEffect } from 'react'
 import Navbar from '../components/Navbar/Navbar'
+import Web3 from 'web3'
+import artifact from '../contracts/UserAuthentication.json'
 
 import { useLocation } from 'react-router-dom'
-import EthContext from '../contexts/EthContext'
 
 const date = new Date()
 
@@ -84,7 +85,7 @@ function ProfileCreation() {
 
     const resp = await contract.methods
       .registerUser(
-        accounts[0],
+        account,
         email,
         password,
         form.firstName,
@@ -92,9 +93,7 @@ function ProfileCreation() {
         dateOfBirth,
         form.gender
       )
-      .send({ from: accounts[0] })
-
-    console.log(resp.toString())
+      .send({ from: account })
   }
 
   return (

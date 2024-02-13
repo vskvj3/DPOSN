@@ -49,7 +49,10 @@ function NewPost() {
           >
             <input
               type="file"
-              onChange={(e) => setFile(e.target.files[0])}
+              onChange={(e) => {
+                setFile(e.target.files[0])
+                console.log(e.target.files[0])
+              }}
               className="hidden"
               id="imgUpload"
               data-max-size="5120"

@@ -1,9 +1,10 @@
-import { useState, React, useEffect } from 'react'
+import { useState, React, useEffect, useContext } from 'react'
 import Navbar from '../components/Navbar/Navbar'
-import Web3 from 'web3'
-import artifact from '../contracts/UserAuthentication.json'
 
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import EthContext from '../contexts/EthContext'
+
+import Web3 from 'web3'
 
 const date = new Date()
 
@@ -40,6 +41,8 @@ function ProfileCreation() {
     state: { contract, accounts },
   } = useContext(EthContext)
 
+  const navigate = useNavigate()
+
   const { email, password } = location.state
 
   const [form, setForm] = useState({
@@ -51,9 +54,10 @@ function ProfileCreation() {
     gender: 'Male',
   })
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    registerUser(email, password, form)
+    await registerUser(email, password, form)
+    navigate('/')
   }
 
   function handleChange(e) {
@@ -85,15 +89,15 @@ function ProfileCreation() {
 
     const resp = await contract.methods
       .registerUser(
-        account,
-        email,
-        password,
-        form.firstName,
-        form.lastName,
-        dateOfBirth,
-        form.gender
+        accounts[0],
+        Web3.utils.padRight(Web3.utils.asciiToHex(email), 64),
+        Web3.utils.padRight(Web3.utils.asciiToHex(password), 64),
+        Web3.utils.padRight(Web3.utils.asciiToHex(form.firstName), 64),
+        Web3.utils.padRight(Web3.utils.asciiToHex(form.lastName), 64),
+        Web3.utils.padRight(Web3.utils.asciiToHex(dateOfBirth), 64),
+        Web3.utils.padRight(Web3.utils.asciiToHex(form.gender), 64)
       )
-      .send({ from: account })
+      .send({ from: accounts[0] })
   }
 
   return (

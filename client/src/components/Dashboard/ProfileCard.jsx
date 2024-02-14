@@ -1,18 +1,45 @@
-import React from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { LiaEditSolid } from 'react-icons/lia'
 import moment from 'moment'
-
-let user = {
-  firstName: 'Visak',
-  lastName: 'Vijay',
-  image: 'https://docs.material-tailwind.com/img/face-2.jpg',
-  friends: ['one', 'two'],
-  views: 5,
-  createdAt: '2015-03-25',
-  status: 'being me',
-}
-
+import EthContext from '../../contexts/EthContext'
+import Web3 from 'web3'
 function ProfileCard() {
+  const {
+    state: { contract, accounts },
+  } = useContext(EthContext)
+
+  async function init() {
+    const data = await contract.methods
+      .getUser(accounts[0])
+      .call({ from: accounts[0] })
+    return data
+  }
+
+  const [user, setUser] = useState({
+    firstName: 'Visak',
+    lastName: 'Vijay',
+    image: 'https://docs.material-tailwind.com/img/face-2.jpg',
+    friends: ['one', 'two'],
+    views: 5,
+    createdAt: '2015-03-25',
+    status: 'being me',
+  })
+
+  useEffect(() => {
+    if (contract != null) {
+      const userData = init()
+      userData.then((data) => {
+        setUser({
+          ...user,
+          firstName: Web3.utils
+            .hexToAscii(data.firstName)
+            .replace(/\0.*$/g, ''),
+          lastName: Web3.utils.hexToAscii(data.lastName).replace(/\0.*$/g, ''),
+        })
+      })
+    }
+  }, [contract])
+
   return (
     /* Rainbow border */
     <div className="w-full rounded-xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">

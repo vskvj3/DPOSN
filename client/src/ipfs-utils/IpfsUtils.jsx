@@ -25,7 +25,7 @@ async function uploadFileToIPFS(file) {
 
 /**
  * upload text to IPFS
- * @param {String} text text to upload to IPFS in string format
+ * @param {String} text text to upload to IPFS as json string
  * @returns {String} CID of the text uploaded to IPFS
  */
 async function uploadTextToIPFS(text) {

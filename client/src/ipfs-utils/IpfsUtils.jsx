@@ -1,3 +1,5 @@
+// Code to upload files and text to IPFS using NFT.Storage
+
 import dotenv from 'dotenv'
 import { NFTStorage } from 'nft.storage'
 

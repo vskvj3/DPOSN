@@ -1,11 +1,8 @@
 // Code to upload files and text to IPFS using NFT.Storage
 
-import dotenv from 'dotenv'
 import { NFTStorage } from 'nft.storage'
 
-dotenv.config()
-
-const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY
+const NFT_STORAGE_KEY = import.meta.env.VITE_NFT_STORAGE_KEY
 
 /**
  * Upload file to IPFS

@@ -16,7 +16,7 @@ function ProfileCard() {
   }
 
   const [user, setUser] = useState({
-    firstName: 'Visak',
+    firstName: 'Visakh',
     lastName: 'Vijay',
     image: 'https://docs.material-tailwind.com/img/face-2.jpg',
     friends: ['one', 'two'],

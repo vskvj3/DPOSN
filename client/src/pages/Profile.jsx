@@ -1,7 +1,6 @@
 import React from 'react'
 import { useState, useEffect, useContext } from 'react'
 import Navbar from '../components/Navbar/Navbar'
-import { Link } from 'react-router-dom'
 import EthContext from '../contexts/EthContext'
 
 import Web3 from 'web3'

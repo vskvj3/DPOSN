@@ -20,6 +20,7 @@ function NewPost() {
 
     if (postText === '' && !file) {
       setError('Please enter a post or upload an image')
+      return
     }
 
     if (file) {

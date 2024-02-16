@@ -13,6 +13,7 @@ function NewPost() {
   const [file, setFile] = useState(null)
   const [postText, setPostText] = useState('')
   const [error, setError] = useState('')
+  const [posting, setPosting] = useState(true)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -22,6 +23,8 @@ function NewPost() {
       setError('Please enter a post or upload an image')
       return
     }
+
+    setPosting(true)
 
     if (file) {
       imageCID = await pinFileToIPFS(file)
@@ -44,6 +47,7 @@ function NewPost() {
 
     setPostText('')
     setFile(null)
+    setPosting(false)
   }
 
   return (
@@ -75,12 +79,20 @@ function NewPost() {
 
         <div className="flex items-center justify-between py-4">
           <div>
-            <CustomButton
-              type="submit"
-              title="Post"
-              containerStyles="bg-[#0444a4] text-white py-1 px-6 rounded-md font-semibold text-sm"
-              onClick={handleSubmit}
-            />
+            {posting ? (
+              <CustomButton
+                type="disabled"
+                title="Posting..."
+                containerStyles="bg-[#0444a4] text-white py-1 px-6 rounded-md font-semibold text-sm"
+              />
+            ) : (
+              <CustomButton
+                type="submit"
+                title="Post"
+                containerStyles="bg-[#0444a4] text-white py-1 px-6 rounded-md font-semibold text-sm"
+                onClick={handleSubmit}
+              />
+            )}
           </div>
 
           <label

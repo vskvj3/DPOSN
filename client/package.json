@@ -22,6 +22,7 @@
     "hamburger-react": "^2.5.0",
     "husky": "^9.0.10",
     "moment": "^2.30.1",
+    "nft.storage": "^7.1.1",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-burger-menu": "^3.0.9",

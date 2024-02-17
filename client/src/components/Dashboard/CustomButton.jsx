@@ -7,6 +7,7 @@ const CustomButton = ({ title, containerStyles, iconRight, type, onClick }) => {
       onClick={onClick}
       type={type || 'button'}
       className={`inline-flex items-center text-base ${containerStyles}`}
+      disabled={type === 'disabled'}
     >
       {title}
 

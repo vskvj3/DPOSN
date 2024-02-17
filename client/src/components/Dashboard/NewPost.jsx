@@ -5,26 +5,49 @@ import { user } from '../../assets/tempdata'
 import CustomButton from './CustomButton'
 import { func } from 'prop-types'
 
-import { uploadTextToIPFS } from '../../ipfs-utils/IpfsUtils'
-import { pinJSONToIPFS } from '../../ipfs-utils/PinataUtils'
+import { pinFileToIPFS, pinJSONToIPFS } from '../../ipfs-utils/PinataUtils'
+
+const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
 function NewPost() {
   const [file, setFile] = useState(null)
   const [postText, setPostText] = useState('')
+  const [error, setError] = useState('')
+  const [posting, setPosting] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
-    console.log(postText)
-    const cid = await pinJSONToIPFS({ post: postText })
-    console.log(cid)
+    let imageCID = ''
 
-    const content = await fetch(
-      `https://harlequin-biological-buzzard-718.mypinata.cloud/ipfs/${cid}`,
-      { method: 'GET', headers: { accept: 'text/plain' } }
-    )
+    if (postText === '' && !file) {
+      setError('Please enter a post or upload an image')
+      return
+    }
+
+    setPosting(true)
+
+    if (file) {
+      imageCID = await pinFileToIPFS(file)
+      console.log(imageCID)
+    }
+    const postTime = new Date().toISOString()
+
+    const postCID = await pinJSONToIPFS({
+      post: postText,
+      image: imageCID,
+      time: postTime,
+    })
+    console.log(postCID)
+
+    const content = await fetch(`${PINATA_GATEWAY}/ipfs/${postCID}`, {
+      method: 'GET',
+      headers: { accept: 'text/plain' },
+    })
     console.log(await content.json())
 
     setPostText('')
+    setFile(null)
+    setPosting(false)
   }
 
   return (
@@ -56,12 +79,20 @@ function NewPost() {
 
         <div className="flex items-center justify-between py-4">
           <div>
-            <CustomButton
-              type="submit"
-              title="Post"
-              containerStyles="bg-[#0444a4] text-white py-1 px-6 rounded-md font-semibold text-sm"
-              onClick={handleSubmit}
-            />
+            {posting ? (
+              <CustomButton
+                type="disabled"
+                title="Posting..."
+                containerStyles="bg-[#0444a4] text-white py-1 px-6 rounded-md font-semibold text-sm"
+              />
+            ) : (
+              <CustomButton
+                type="submit"
+                title="Post"
+                containerStyles="bg-[#0444a4] text-white py-1 px-6 rounded-md font-semibold text-sm"
+                onClick={handleSubmit}
+              />
+            )}
           </div>
 
           <label
@@ -84,6 +115,7 @@ function NewPost() {
             <span>Image</span>
           </label>
         </div>
+        <p className="text-red-700 pb-3">{error}</p>
       </form>
     </div>
   )

@@ -5,9 +5,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import EthContext from '../contexts/EthContext'
 import NoProfile from '../assets/images/userprofile.png'
 
-
 import Web3 from 'web3'
 import { BiCamera, BiPlusCircle } from 'react-icons/bi'
+import { pinFileToIPFS, pinJSONToIPFS } from '../ipfs-utils/PinataUtils'
 
 const date = new Date()
 
@@ -46,7 +46,9 @@ function ProfileCreation() {
 
   const navigate = useNavigate()
 
-  const { email, password } = location.state
+  const { userName } = location.state
+
+  const [file, setFile] = useState(null)
 
   const [form, setForm] = useState({
     firstName: '',
@@ -54,13 +56,16 @@ function ProfileCreation() {
     day: date.getDate(),
     month: months[date.getMonth()],
     year: date.getFullYear(),
-    gender: 'Male',
     status: '',
   })
 
   async function handleSubmit(e) {
     e.preventDefault()
-    await registerUser(email, password, form)
+    let imageCID = ''
+    if (file) {
+      imageCID = await pinFileToIPFS(file)
+    }
+    await registerUser(imageCID, userName, form)
     navigate('/')
   }
 
@@ -78,7 +83,7 @@ function ProfileCreation() {
   //   loadContract()
   // }, [])
 
-  async function registerUser(email, password, form) {
+  async function registerUser(imageCID, userName, form) {
     let dateOfBirth = `${form.day}/${form.month}/${form.year}`
 
     // console.log(
@@ -94,12 +99,12 @@ function ProfileCreation() {
     await contract.methods
       .registerUser(
         accounts[0],
-        Web3.utils.padRight(Web3.utils.asciiToHex(email), 64),
-        Web3.utils.padRight(Web3.utils.asciiToHex(password), 64),
+        imageCID,
+        Web3.utils.padRight(Web3.utils.asciiToHex(userName), 64),
         Web3.utils.padRight(Web3.utils.asciiToHex(form.firstName), 64),
         Web3.utils.padRight(Web3.utils.asciiToHex(form.lastName), 64),
         Web3.utils.padRight(Web3.utils.asciiToHex(dateOfBirth), 64),
-        Web3.utils.padRight(Web3.utils.asciiToHex(form.gender), 64)
+        Web3.utils.padRight(Web3.utils.asciiToHex(form.status), 64)
       )
       .send({ from: accounts[0] })
   }
@@ -127,13 +132,17 @@ function ProfileCreation() {
                 accept=".jpg, .png, .jpeg"
               />
               <span className="rela">
-                <div className="w-20 h-20 mt-3 rounded-full border-2 bg-slate-400 flex justify-center relative">
-                  <div className="">
-                    {/* <BiPlusCircle /> */}
-                    <img src={NoProfile}></img>
+                <div className="w-20 h-20 mt-3 rounded-full border-2 bg-slate-400 flex justify-center relative ">
+                  {/* <BiPlusCircle /> */}
+                  <div className="overflow-hidden h-full w-full rounded-full border-2">
+                    <img
+                      className="object-cover object-center"
+                      src={file ? URL.createObjectURL(file) : NoProfile}
+                    ></img>
                   </div>
+
                   <div className="absolute bottom-0 right-0">
-                <BiCamera size={25} />
+                    <BiCamera size={25} />
                   </div>
                 </div>
               </span>

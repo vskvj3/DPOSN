@@ -15,8 +15,8 @@ async function fetchPosts() {
 }
 
 function MainSection() {
-  // const [posts, setPosts] = useState([])
-  // const [user, setUser] = useState([])
+  const [posts, setPosts] = useState([])
+  const [user, setUser] = useState([])
 
   // useEffect(() => {
   //   const { posts, user } = {}

@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from '../components/Navbar/Navbar'
 import { Link } from 'react-router-dom'
+import Cookies from 'js-cookie'
 
 function Home() {
   return (
@@ -27,10 +28,7 @@ function Home() {
               </li>
               <li>
                 <Link to="/login">
-                  <button
-                    className="h-10 bg-pink-600 mt-5 min-w-60 rounded-lg text-white"
-                    onClick={console.log('Pressed')}
-                  >
+                  <button className="h-10 bg-pink-600 mt-5 min-w-60 rounded-lg text-white">
                     Login here
                   </button>
                 </Link>

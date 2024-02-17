@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar/Navbar'
 import { useLocation, useNavigate } from 'react-router-dom'
 import EthContext from '../contexts/EthContext'
 import NoProfile from '../assets/images/userprofile.png'
-
+import Cookies from 'js-cookie'
 import Web3 from 'web3'
 import { BiCamera, BiPlusCircle } from 'react-icons/bi'
 import { pinFileToIPFS, pinJSONToIPFS } from '../ipfs-utils/PinataUtils'
@@ -66,6 +66,8 @@ function ProfileCreation() {
       imageCID = await pinFileToIPFS(file)
     }
     await registerUser(imageCID, userName, form)
+    Cookies.set('user', accounts[0])
+    Cookies.set('loggedIn', true)
     navigate('/')
   }
 

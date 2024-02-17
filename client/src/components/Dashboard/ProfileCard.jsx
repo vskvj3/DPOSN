@@ -13,6 +13,9 @@ function ProfileCard() {
     const data = await contract.methods
       .getUser(accounts[0])
       .call({ from: accounts[0] })
+      .catch((err) => {
+        console.log(err)
+      })
     return data
   }
 
@@ -42,6 +45,8 @@ function ProfileCard() {
           imageCID: data.imageCID,
           status: Web3.utils.hexToAscii(data.status).replace(/\0.*$/g, ''),
         })
+        console.log(data)
+        console.log(data.imageCID)
       })
     }
   }, [contract])
@@ -62,6 +67,8 @@ function ProfileCard() {
             alt="avatar"
             className="w-14 h-14 object-cover rounded-full"
           />
+          {console.log(`${PINATA_GATEWAY}/ipfs/${user.imageCID}`)}
+          {console.log(user.imageCID)}
           <div className="flex flex-col justify-center">
             <p className="text-lg font-medium text-ascent-1">{user.userName}</p>
             <span className="text-ascent-2">{user?.status ?? ''}</span>

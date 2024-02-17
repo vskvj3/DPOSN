@@ -5,13 +5,12 @@ import PropTypes from 'prop-types'
 import { postComments } from '../../assets/tempdata'
 import { BiComment, BiLike, BiSolidLike } from 'react-icons/bi'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
+import CommentSection from './CommentSection'
 
 function PostCard({ post, user, deletePost, likePost }) {
   const [showAll, setShowAll] = useState(0)
-  // const [showReply, setShowReply] = useState(0)
   const [comments, setComments] = useState([])
   // const [loading, setLoading] = useState(false)
-  // const [replyComments, setReplyComments] = useState(0)
   const [showComments, setShowComments] = useState(false)
 
   return (
@@ -109,22 +108,8 @@ function PostCard({ post, user, deletePost, likePost }) {
 
         {/* Comments  */}
         {showComments === true &&
-          comments?.map((comment) => (
-            <div key={comment?._id} className="flex gap-2 items-center mt-2">
-              <img
-                src={comment?.userId?.profileUrl ?? NoProfile}
-                alt={comment?.userId?.firstName}
-                className="w-10 h-10 object-cover rounded-full"
-              />
-              <div>
-                <p className="text-base font-medium text-ascent-1">
-                  {comment?.userId?.firstName} {comment?.userId?.lastName}
-                </p>
-                <span className="text-sm text-ascent-2">
-                  {comment?.comment}
-                </span>
-              </div>
-            </div>
+          comments?.map((cmt) => (
+            <CommentSection key={cmt._id} comment={cmt} />
           ))}
       </div>
     </div>

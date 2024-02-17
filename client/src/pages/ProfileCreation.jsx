@@ -1,10 +1,13 @@
-import { useState, React, useEffect, useContext } from 'react'
+import { useState, React, useContext } from 'react'
 import Navbar from '../components/Navbar/Navbar'
 
 import { useLocation, useNavigate } from 'react-router-dom'
 import EthContext from '../contexts/EthContext'
+import NoProfile from '../assets/images/userprofile.png'
+
 
 import Web3 from 'web3'
+import { BiCamera, BiPlusCircle } from 'react-icons/bi'
 
 const date = new Date()
 
@@ -52,6 +55,7 @@ function ProfileCreation() {
     month: months[date.getMonth()],
     year: date.getFullYear(),
     gender: 'Male',
+    status: '',
   })
 
   async function handleSubmit(e) {
@@ -87,7 +91,7 @@ function ProfileCreation() {
     //   form.gender
     // )
 
-    const resp = await contract.methods
+    await contract.methods
       .registerUser(
         accounts[0],
         Web3.utils.padRight(Web3.utils.asciiToHex(email), 64),
@@ -105,9 +109,35 @@ function ProfileCreation() {
       <div className="w-screen h-screen bg-gradient-to-r to-red-300 from-slate-300 overflow-hidden">
         <Navbar />
         <div className="grid place-content-center h-full">
-          <div className="bg-white w-[23rem] h-[26rem]  sm:w-[26rem] sm:h-[26rem]  flex flex-col items-center  place-content-center rounded-lg shadow-xl">
+          <div className="bg-white w-[20rem] h-[30rem]  sm:w-[30rem] sm:h-[36rem]  flex flex-col items-center  place-content-center rounded-lg shadow-xl">
             <h1 className="mt-4 text-xl">Profile Details</h1>
-
+            <label
+              htmlFor="imgUpload"
+              className="flex items-center gap-1 text-base text-ascent-2 hover:text-ascent-1 cursor-pointer"
+            >
+              <input
+                type="file"
+                onChange={(e) => {
+                  setFile(e.target.files[0])
+                  console.log(e.target.files[0])
+                }}
+                className="hidden"
+                id="imgUpload"
+                data-max-size="5120"
+                accept=".jpg, .png, .jpeg"
+              />
+              <span className="rela">
+                <div className="w-20 h-20 mt-3 rounded-full border-2 bg-slate-400 flex justify-center relative">
+                  <div className="">
+                    {/* <BiPlusCircle /> */}
+                    <img src={NoProfile}></img>
+                  </div>
+                  <div className="absolute bottom-0 right-0">
+                <BiCamera size={25} />
+                  </div>
+                </div>
+              </span>
+            </label>
             <form className="flex flex-col w-80 h-80 mt-8 ">
               <input
                 className="h-10 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
@@ -123,6 +153,14 @@ function ProfileCreation() {
                 type="lastName"
                 value={form.lastName}
                 name="lastName"
+                onChange={handleChange}
+              ></input>
+              <input
+                className="h-10 mt-4 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
+                placeholder="Status"
+                type="status"
+                value={form.status}
+                name="status"
                 onChange={handleChange}
               ></input>
               <p className="mt-2 text-xs text-gray-500 h-3px">Date of birth</p>
@@ -158,20 +196,6 @@ function ProfileCreation() {
                   ))}
                 </select>
               </div>
-
-              <p className="mt-2 text-xs text-gray-500 h-3px">Gender</p>
-
-              <select
-                className="h-10 mt-1 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
-                type="gender"
-                value={form.gender}
-                name="gender"
-                onChange={handleChange}
-              >
-                <option key={'Male'}>Male</option>
-                <option key={'Female'}>Female</option>
-              </select>
-
               <button
                 className="h-10 bg-pink-600 mt-5 rounded-lg text-white"
                 onClick={handleSubmit}

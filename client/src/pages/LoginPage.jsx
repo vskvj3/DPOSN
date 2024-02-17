@@ -1,27 +1,44 @@
-import { useState, React } from 'react'
+import { useState, React, useContext } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar/Navbar'
 import { Link } from 'react-router-dom'
-function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+import EthContext from '../contexts/EthContext'
+import Web3 from 'web3'
 
-  function handleSubmit(e) {
-    e.preventDefault()
-    setEmail('')
-    setPassword('')
+function LoginPage() {
+  const [userExists, setUserExists] = useState(true)
+
+  const {
+    state: { contract, accounts },
+  } = useContext(EthContext)
+
+  async function loginUser() {
+    if (contract != null) {
+      const data = await contract.methods
+        .loginUser(accounts[0])
+        .call({ from: accounts[0] })
+        .catch((err) => {
+          console.log(err)
+        })
+
+      return data
+    }
   }
 
-  function handleChange(e) {
-    switch (e.target.name) {
-      case 'email':
-        setEmail(e.target.value)
-        break
-      case 'password':
-        setPassword(e.target.value)
-        break
-      default:
-        break
-    }
+  const navigate = useNavigate()
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    const userData = loginUser()
+    userData.then((data) => {
+      console.log('data' + data)
+      if (data) {
+        navigate('/')
+      } else {
+        console.log('User not found')
+        setUserExists(false)
+      }
+    })
   }
 
   return (
@@ -31,32 +48,17 @@ function LoginPage() {
         <div className="grid place-content-center h-full">
           <div className="bg-white w-[23rem] h-[26rem]  sm:w-[26rem] sm:h-[26rem]  flex flex-col items-center  place-content-center rounded-lg shadow-xl">
             <h1 className="mt-4 text-xl">Log in</h1>
-
             <form className="flex flex-col w-80 h-56 mt-8 ">
-              <input
-                className="h-10 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
-                placeholder="Email"
-                type="email"
-                value={email}
-                name="email"
-                onChange={handleChange}
-              ></input>
-              <input
-                className="h-10 mt-4 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
-                placeholder="Password"
-                type="password"
-                value={password}
-                name="password"
-                onChange={handleChange}
-              ></input>
-
-              <p className="mt-5">
-                Don&apos;t have an account?{' '}
-                <Link className=" text-red-500" to="/signup">
-                  Create account
-                </Link>
-              </p>
-
+              {userExists ? (
+                <p className="mt-5">
+                  Don&apos;t have an account?{' '}
+                  <Link className=" text-red-500" to="/signup">
+                    Create account
+                  </Link>
+                </p>
+              ) : (
+                ''
+              )}
               <button
                 className="h-10 bg-pink-600 mt-5 rounded-lg text-white"
                 onClick={handleSubmit}
@@ -64,6 +66,16 @@ function LoginPage() {
                 Log in
               </button>
             </form>
+            {!userExists ? (
+              <p className="mt-5 text-red-600">
+                User does not exist!{' '}
+                <Link className=" text-blue" to="/signup">
+                  Sign up
+                </Link>
+              </p>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>

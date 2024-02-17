@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar/Navbar'
 import { Link } from 'react-router-dom'
 import EthContext from '../contexts/EthContext'
 import Web3 from 'web3'
+import Cookies from 'js-cookie'
 
 function LoginPage() {
   const [userExists, setUserExists] = useState(true)
@@ -31,8 +32,11 @@ function LoginPage() {
     e.preventDefault()
     const userData = loginUser()
     userData.then((data) => {
-      console.log('data' + data)
+      console.log('user data from blockchain: ' + data)
       if (data) {
+        console.log('user exists, successfully logged in')
+        Cookies.set('user', accounts[0])
+        Cookies.set('loggedIn', true)
         navigate('/')
       } else {
         console.log('User not found')

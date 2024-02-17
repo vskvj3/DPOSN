@@ -13,7 +13,7 @@ function NewPost() {
   const [file, setFile] = useState(null)
   const [postText, setPostText] = useState('')
   const [error, setError] = useState('')
-  const [posting, setPosting] = useState(true)
+  const [posting, setPosting] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()

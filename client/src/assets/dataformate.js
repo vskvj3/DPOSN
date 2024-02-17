@@ -10,20 +10,18 @@ export const user = {
 
 export const posts = [
   {
-    postId: 1,
     userId: 1,
-    description: 'This is a post',
-    image: 'hash',
+    postHash: 'QmQNTkmWPV9KP6xT3kiFZcTMJYmgnHR5vb6QEGfH7PoBRs',
   },
   {
-    postId: 1,
     userId: 1,
-    description: 'This is a post',
-    image: 'hash',
+    postHash: 'QmWCPYuf8vtxc1XyxQVyxwPU6NHUxPdhp3KkMQwcAXhvTz',
+  },
+  {
+    userId: 1,
+    postHash: 'QmU8hSuXZbdaDEH27N1MPEnyF3rkKERvtBXG1m7KZjjFN2',
   },
 ]
-
-export const postComments = []
 
 export const comments = [
   {

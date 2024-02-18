@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import EthContext from '../contexts/EthContext'
 import NoProfile from '../assets/images/userprofile.png'
 
-
 import Web3 from 'web3'
 import { BiCamera, BiPlusCircle } from 'react-icons/bi'
 

@@ -39,7 +39,6 @@ function MainSection() {
       .call({ from: accounts[0] })
 
 
-
     return allPostData
   }
 
@@ -89,7 +88,8 @@ function MainSection() {
           profileUrl: fetchedUserData.imageCID
             ? `${PINATA_GATEWAY}/ipfs/${fetchedUserData.imageCID}`
             : '',
-          UserName: Web3.utils
+
+          userName: Web3.utils
             .hexToAscii(fetchedUserData.userName)
             .replace(/\0.*$/g, ''),
           createdAt: postContent[i].time,
@@ -99,7 +99,10 @@ function MainSection() {
           description: postContent[i].post,
         })
       }
-      console.log(posts)
+
+      console.log('posts from mainsection:')
+      console.log(tempPosts)
+
       setPosts(tempPosts)
     }
   }

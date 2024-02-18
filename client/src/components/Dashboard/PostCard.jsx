@@ -19,20 +19,19 @@ function PostCard({ post, deletePost, likePost }) {
     state: { contract, accounts },
   } = useContext(EthContext)
 
-
   return (
     <div>
       <div className="mb-2 bg-primary p-4 rounded-xl shadow-xl">
         <div className="flex gap-3 items-center mb-2">
           <img
-            src={post?.profileUrl ?? NoProfile}
-            alt={post?.userName ?? 'user name'}
+            src={post?.profileUrl ? post?.profileUrl : NoProfile}
+            alt={post?.userName ? post?.userName : 'user name'}
             className="w-14 h-14 object-cover rounded-full"
           />
           <div className="w-full flex justify-between">
             <div className="">
               <p className="font-medium text-lg text-ascent-1">
-                {post?.userName}
+                {post?.userName ? post?.userName : 'no username'}
               </p>
               <span className="text-ascent-2">{''}</span>
             </div>

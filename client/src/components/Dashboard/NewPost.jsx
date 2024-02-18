@@ -61,11 +61,11 @@ function NewPost() {
     <div className="pb-2 sticky">
       <form className="bg-primary px-4 rounded-xl shadow-xl w-full">
         <div className="w-full flex items-center gap-2 py-4 border-b border-[#66666645]">
-          <img
+          {/* <img
             src={user?.profileUrl ?? NoProfile}
             alt="User Image"
             className="w-14 h-14 rounded-full object-cover"
-          />
+          /> */}
 
           <div className="w-full flex flex-col mt-2">
             <div>

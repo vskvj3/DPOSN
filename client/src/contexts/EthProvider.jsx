@@ -1,6 +1,6 @@
 import EthContext from './EthContext'
 import Web3 from 'web3'
-import artifact from '../contracts/UserAuthentication.json'
+import artifact from '../contracts/SocialNetwork.json'
 import { useEffect, useReducer } from 'react'
 
 const actions = {

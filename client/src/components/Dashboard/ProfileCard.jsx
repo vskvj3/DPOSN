@@ -3,6 +3,7 @@ import { LiaEditSolid } from 'react-icons/lia'
 import moment from 'moment'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
+const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 function ProfileCard() {
   const {
     state: { contract, accounts },
@@ -12,10 +13,15 @@ function ProfileCard() {
     const data = await contract.methods
       .getUser(accounts[0])
       .call({ from: accounts[0] })
+      .catch((err) => {
+        console.log(err)
+      })
     return data
   }
 
   const [user, setUser] = useState({
+    userName: '',
+    imageCID: '',
     firstName: 'Visakh',
     lastName: 'Vijay',
     image: 'https://docs.material-tailwind.com/img/face-2.jpg',
@@ -31,11 +37,16 @@ function ProfileCard() {
       userData.then((data) => {
         setUser({
           ...user,
+          userName: Web3.utils.hexToAscii(data.userName).replace(/\0.*$/g, ''),
           firstName: Web3.utils
             .hexToAscii(data.firstName)
             .replace(/\0.*$/g, ''),
           lastName: Web3.utils.hexToAscii(data.lastName).replace(/\0.*$/g, ''),
+          imageCID: data.imageCID,
+          status: Web3.utils.hexToAscii(data.status).replace(/\0.*$/g, ''),
         })
+        console.log(data)
+        console.log(data.imageCID)
       })
     }
   }, [contract])
@@ -48,14 +59,18 @@ function ProfileCard() {
         {/* Profile Badge */}
         <div className="w-full flex items-center justify-between border-b pb-5 border-[#66666645]">
           <img
-            src={user?.image}
+            src={
+              user.imageCID
+                ? `${PINATA_GATEWAY}/ipfs/${user.imageCID}`
+                : user.image
+            }
             alt="avatar"
             className="w-14 h-14 object-cover rounded-full"
           />
+          {console.log(`${PINATA_GATEWAY}/ipfs/${user.imageCID}`)}
+          {console.log(user.imageCID)}
           <div className="flex flex-col justify-center">
-            <p className="text-lg font-medium text-ascent-1">
-              {user?.firstName} {user?.lastName}
-            </p>
+            <p className="text-lg font-medium text-ascent-1">{user.userName}</p>
             <span className="text-ascent-2">{user?.status ?? ''}</span>
           </div>
 

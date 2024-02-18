@@ -19,8 +19,6 @@ function PostCard({ post, deletePost, likePost }) {
     state: { contract, accounts },
   } = useContext(EthContext)
 
-  console.log(post)
-
   return (
     <div>
       <div className="mb-2 bg-primary p-4 rounded-xl shadow-xl">

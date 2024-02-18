@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { BiImages } from 'react-icons/bi'
 import NoProfile from '../../assets/images/userprofile.png'
 import { user } from '../../assets/tempdata'
 import CustomButton from './CustomButton'
 import { func } from 'prop-types'
+import EthContext from '../../contexts/EthContext'
 
 import { pinFileToIPFS, pinJSONToIPFS } from '../../ipfs-utils/PinataUtils'
 
@@ -14,6 +15,10 @@ function NewPost() {
   const [postText, setPostText] = useState('')
   const [error, setError] = useState('')
   const [posting, setPosting] = useState(false)
+
+  const {
+    state: { contract, accounts },
+  } = useContext(EthContext)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -39,11 +44,13 @@ function NewPost() {
     })
     console.log(postCID)
 
-    const content = await fetch(`${PINATA_GATEWAY}/ipfs/${postCID}`, {
-      method: 'GET',
-      headers: { accept: 'text/plain' },
-    })
-    console.log(await content.json())
+    // const content = await fetch(`${PINATA_GATEWAY}/ipfs/${postCID}`, {
+    //   method: 'GET',
+    //   headers: { accept: 'text/plain' },
+    // })
+    // console.log(await content.json())
+
+    await contract.methods.addPost(postCID).send({ from: accounts[0] })
 
     setPostText('')
     setFile(null)

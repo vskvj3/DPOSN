@@ -45,7 +45,7 @@ function ProfileCard() {
           imageCID: data.imageCID,
           status: Web3.utils.hexToAscii(data.status).replace(/\0.*$/g, ''),
         })
-        console.log(data)
+        // console.log(data)
         console.log(data.imageCID)
       })
     }
@@ -67,8 +67,8 @@ function ProfileCard() {
             alt="avatar"
             className="w-14 h-14 object-cover rounded-full"
           />
-          {console.log(`${PINATA_GATEWAY}/ipfs/${user.imageCID}`)}
-          {console.log(user.imageCID)}
+          {/* {console.log(`${PINATA_GATEWAY}/ipfs/${user.imageCID}`)} */}
+          {/* {console.log(user.imageCID)} */}
           <div className="flex flex-col justify-center">
             <p className="text-lg font-medium text-ascent-1">{user.userName}</p>
             <span className="text-ascent-2">{user?.status ?? ''}</span>

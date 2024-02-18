@@ -1,33 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import NoProfile from '../../assets/images/userprofile.png'
 import moment from 'moment'
 import PropTypes from 'prop-types'
-import { postComments } from '../../assets/tempdata'
+// import { postComments } from '../../assets/tempdata'
 import { BiComment, BiLike, BiSolidLike } from 'react-icons/bi'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
 import CommentSection from './CommentSection'
+import EthContext from '../../contexts/EthContext'
 
-function PostCard({ post, user, deletePost, likePost }) {
+function PostCard({ post, deletePost, likePost }) {
   const [showAll, setShowAll] = useState(0)
   const [comments, setComments] = useState([])
   // const [loading, setLoading] = useState(false)
   const [showComments, setShowComments] = useState(false)
+  const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
+
+  const {
+    state: { contract, accounts },
+  } = useContext(EthContext)
 
   return (
     <div>
       <div className="mb-2 bg-primary p-4 rounded-xl shadow-xl">
         <div className="flex gap-3 items-center mb-2">
           <img
-            src={post?.userId?.profileUrl ?? NoProfile}
-            alt={post?.userId?.firstName ?? 'user name'}
+            src={post?.profileUrl ? post?.profileUrl : NoProfile}
+            alt={post?.userName ? post?.userName : 'user name'}
             className="w-14 h-14 object-cover rounded-full"
           />
           <div className="w-full flex justify-between">
             <div className="">
               <p className="font-medium text-lg text-ascent-1">
-                {post?.userId?.firstName} {post?.userId?.lastName}
+                {post?.userName ? post?.userName : 'no username'}
               </p>
-              <span className="text-ascent-2">{post?.userId?.location}</span>
+              <span className="text-ascent-2">{''}</span>
             </div>
 
             <span className="text-ascent-2">
@@ -95,7 +101,7 @@ function PostCard({ post, user, deletePost, likePost }) {
             {post?.comments?.length} Comments
           </p>
 
-          {user?._id === post?.userId?._id && (
+          {accounts[0] === post?.userId?._id && (
             <div
               className="flex gap-1 items-center text-base text-ascent-1 cursor-pointer"
               onClick={() => deletePost(post?._id)}
@@ -118,7 +124,6 @@ function PostCard({ post, user, deletePost, likePost }) {
 
 PostCard.propTypes = {
   post: PropTypes.object,
-  user: PropTypes.object,
   deletePost: PropTypes.func,
   likePost: PropTypes.func,
 }

@@ -38,8 +38,6 @@ function MainSection() {
       .getPosts()
       .call({ from: accounts[0] })
 
-
-
     return allPostData
   }
 
@@ -75,7 +73,6 @@ function MainSection() {
     }
   }, [allPostData])
 
-
   const tempPosts = []
 
   async function fetchPosts() {
@@ -89,7 +86,7 @@ function MainSection() {
           profileUrl: fetchedUserData.imageCID
             ? `${PINATA_GATEWAY}/ipfs/${fetchedUserData.imageCID}`
             : '',
-          UserName: Web3.utils
+          userName: Web3.utils
             .hexToAscii(fetchedUserData.userName)
             .replace(/\0.*$/g, ''),
           createdAt: postContent[i].time,
@@ -99,7 +96,8 @@ function MainSection() {
           description: postContent[i].post,
         })
       }
-      console.log(posts)
+      console.log('posts from mainsection:')
+      console.log(tempPosts)
       setPosts(tempPosts)
     }
   }
@@ -113,7 +111,6 @@ function MainSection() {
   // useEffect(() => {
   //   console.log(posts)
   // }, [posts])
-
 
   return (
     <div>

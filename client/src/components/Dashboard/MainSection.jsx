@@ -23,9 +23,9 @@ function MainSection() {
     state: { contract, accounts },
   } = useContext(EthContext)
 
-  async function fetchUserData() {
+  async function fetchUserData(userAddress) {
     const data = await contract.methods
-      .getUser(accounts[0])
+      .getUser(userAddress)
       .call({ from: accounts[0] })
       .catch((err) => {
         console.log(err)
@@ -37,7 +37,9 @@ function MainSection() {
     const allPostData = await contract.methods
       .getPosts()
       .call({ from: accounts[0] })
-    console.log(allPostData)
+
+
+
     return allPostData
   }
 
@@ -73,31 +75,45 @@ function MainSection() {
     }
   }, [allPostData])
 
+
   const tempPosts = []
-  useEffect(() => {
-    if (postContent.length != 0) {
+
+  async function fetchPosts() {
+    if (postContent.length != 0 && posts.length === 0) {
       for (let i = 0; i < postContent.length; i++) {
-        const fetchedUserData = fetchUserData(allPostData.userAddress)
-        fetchedUserData.then((data) =>
-          tempPosts.push({
-            _id: allPostData[i].postCID,
-            profileUrl: data.imageCID
-              ? `${PINATA_GATEWAY}/ipfs/${data.imageCID}`
-              : '',
-            UserName: Web3.utils
-              .hexToAscii(data.userName)
-              .replace(/\0.*$/g, ''),
-            createdAt: postContent[i].time,
-            image: postContent[i].image
-              ? `${PINATA_GATEWAY}/ipfs/${postContent[i].image}`
-              : '',
-            description: postContent[i].post,
-          })
-        )
+        const fetchedUserData = await fetchUserData(allPostData[i].userAddress)
+        console.log(fetchedUserData)
+
+        tempPosts.push({
+          _id: allPostData[i].postCID,
+          profileUrl: fetchedUserData.imageCID
+            ? `${PINATA_GATEWAY}/ipfs/${fetchedUserData.imageCID}`
+            : '',
+          UserName: Web3.utils
+            .hexToAscii(fetchedUserData.userName)
+            .replace(/\0.*$/g, ''),
+          createdAt: postContent[i].time,
+          image: postContent[i].image
+            ? `${PINATA_GATEWAY}/ipfs/${postContent[i].image}`
+            : '',
+          description: postContent[i].post,
+        })
       }
+      console.log(posts)
       setPosts(tempPosts)
     }
+  }
+
+  useEffect(() => {
+    if (postContent.length != 0 && posts.length === 0) {
+      fetchPosts()
+    }
   }, [postContent])
+
+  // useEffect(() => {
+  //   console.log(posts)
+  // }, [posts])
+
 
   return (
     <div>

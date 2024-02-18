@@ -18,6 +18,8 @@ contract SocialNetwork {
 
     mapping(address => userData) accounts;
 
+    address[] public userAddresses;
+
     function registerUser(
         address _userAddress,
         string memory _imageCID,
@@ -31,6 +33,7 @@ contract SocialNetwork {
             accounts[_userAddress].userAddress != msg.sender,
             "User already registered"
         );
+        userAddresses.push(_userAddress);
         accounts[msg.sender] = userData({
             userAddress: msg.sender,
             imageCID: _imageCID,
@@ -40,6 +43,10 @@ contract SocialNetwork {
             dateOfBirth: _dateOfBirth,
             status: _status
         });
+    }
+
+    function getAllUsers() public view returns (address[] memory) {
+        return userAddresses;
     }
 
     function getUser(

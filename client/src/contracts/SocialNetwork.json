@@ -13150,12 +13150,14 @@
     "80001": {
       "events": {},
       "links": {},
-      "address": "0x6E408E0429c6DC415d8D72681Bef83FEF9b3171a",
-      "transactionHash": "0x2c2812e234f58f9aa8858514e82a75b4b29fb27c6c5baf7e2db0a3725f2b958a"
+      "address": "0xe421F5f244A223cb6b779d083b84f467bAfe693C",
+      "transactionHash": "0x56124ffa0a8ae72bfd0cde25bd009843e4cc14a33b286f162062955d3236e0d0"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-02-18T13:22:25.691Z",
+
+  "updatedAt": "2024-02-18T17:59:04.933Z",
+
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

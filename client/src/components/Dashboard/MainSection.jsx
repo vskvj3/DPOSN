@@ -38,6 +38,8 @@ function MainSection() {
       .getPosts()
       .call({ from: accounts[0] })
 
+
+
     return allPostData
   }
 
@@ -72,6 +74,7 @@ function MainSection() {
       }
     }
   }, [allPostData])
+
 
   const tempPosts = []
 
@@ -110,6 +113,7 @@ function MainSection() {
   // useEffect(() => {
   //   console.log(posts)
   // }, [posts])
+
 
   return (
     <div>

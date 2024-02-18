@@ -211,7 +211,7 @@ function ProfileCreation() {
                 className="h-10 bg-pink-600 mt-5 rounded-lg text-white"
                 onClick={handleSubmit}
               >
-                Created Profile
+                Create Profile
               </button>
             </form>
           </div>

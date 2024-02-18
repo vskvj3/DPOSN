@@ -2,6 +2,10 @@
 pragma solidity ^0.8.13;
 
 contract SocialNetwork {
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  User Authentication Section                                                                                     //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     struct userData {
         address userAddress;
         string imageCID;
@@ -38,8 +42,14 @@ contract SocialNetwork {
         });
     }
 
-    function getUser() public view returns (userData memory) {
-        return accounts[msg.sender];
+    function getUser(
+        address userAddress
+    ) public view returns (userData memory) {
+        require(
+            abi.encodePacked(accounts[msg.sender].userAddress).length > 0,
+            "user doesn't exist"
+        );
+        return accounts[userAddress];
     }
 
     function loginUser() public view returns (bool) {
@@ -48,5 +58,51 @@ contract SocialNetwork {
             "user doesn't exist"
         );
         return true;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  Post and Comment Section                                                                                        //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    struct post {
+        address userAddress;
+        string postCID;
+        string commentCID;
+    }
+
+    // string[] postList;
+    // mapping(string => post) postData;
+
+    // function addPost(string memory _PostCID) public {
+    //     require(
+    //         accounts[msg.sender].userAddress == msg.sender,
+    //         "User doesn't exist"
+    //     );
+    //     postList.push(_PostCID);
+    //     postData[_PostCID] = post({
+    //         userAddress: msg.sender,
+    //         postCID: _PostCID,
+    //         commentCID: ""
+    //     });
+    // }
+
+    post[] allPostData;
+
+    function addPost(string memory _PostCID) public {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
+        );
+        allPostData.push(
+            post({userAddress: msg.sender, postCID: _PostCID, commentCID: ""})
+        );
+    }
+
+    function getPosts() public view returns (post[] memory) {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
+        );
+        return allPostData;
     }
 }

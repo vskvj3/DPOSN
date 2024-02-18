@@ -3,7 +3,9 @@ import { LiaEditSolid } from 'react-icons/lia'
 import moment from 'moment'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
+import NoProfile from '../../assets/images/userprofile.png'
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
+
 function ProfileCard() {
   const {
     state: { contract, accounts },
@@ -27,7 +29,7 @@ function ProfileCard() {
     image: 'https://docs.material-tailwind.com/img/face-2.jpg',
     friends: ['one', 'two'],
     views: 5,
-    createdAt: '2015-03-25',
+    createdAt: '2024-02-20',
     status: 'being me',
   })
 
@@ -62,7 +64,7 @@ function ProfileCard() {
             src={
               user.imageCID
                 ? `${PINATA_GATEWAY}/ipfs/${user.imageCID}`
-                : user.image
+                : NoProfile
             }
             alt="avatar"
             className="w-14 h-14 object-cover rounded-full"
@@ -85,13 +87,10 @@ function ProfileCard() {
 
         {/* Profile Status */}
         <div className="w-full flex flex-col gap-2 py-4 border-b border-[#66666645]">
-          <p className="text-xl text-ascent-1 font-semibold">
+          {/* <p className="text-xl text-ascent-1 font-semibold">
             {user?.friends?.length} Friends
-          </p>
-          <div className="flex items-center justify-between">
-            <span className="text-ascent-2">Profile Views</span>
-            <span className="text-ascent-1 text-lg">{user?.views}</span>
-          </div>
+          </p> */}
+
           <div className="flex items-center justify-between">
             <span className="text-ascent-2">Joined</span>
             <span className="text-ascent-1 text-base">

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { user, friends } from '../../assets/tempdata'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
 import NoProfile from '/src/assets/images/userprofile.png'

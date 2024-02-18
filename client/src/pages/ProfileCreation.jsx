@@ -6,8 +6,8 @@ import EthContext from '../contexts/EthContext'
 import NoProfile from '../assets/images/userprofile.png'
 import Cookies from 'js-cookie'
 import Web3 from 'web3'
-import { BiCamera, BiPlusCircle } from 'react-icons/bi'
-import { pinFileToIPFS, pinJSONToIPFS } from '../ipfs-utils/PinataUtils'
+import { BiCamera } from 'react-icons/bi'
+import { pinFileToIPFS } from '../ipfs-utils/PinataUtils'
 
 const date = new Date()
 
@@ -138,7 +138,7 @@ function ProfileCreation() {
                   {/* <BiPlusCircle /> */}
                   <div className="overflow-hidden h-full w-full rounded-full border-2">
                     <img
-                      className="object-cover object-center"
+                      className="h-full w-full object-cover object-center"
                       src={file ? URL.createObjectURL(file) : NoProfile}
                     ></img>
                   </div>

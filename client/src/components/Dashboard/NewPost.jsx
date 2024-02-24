@@ -6,7 +6,7 @@ import CustomButton from './CustomButton'
 import { func } from 'prop-types'
 import EthContext from '../../contexts/EthContext'
 
-import { pinFileToIPFS, pinJSONToIPFS } from '../../ipfs-utils/PinataUtils'
+import { pinFileToIPFS, pinJSONToIPFS } from '../../utils/PinataUtils'
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 

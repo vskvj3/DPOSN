@@ -1,16 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react'
-// import { user } from '../../assets/tempdata'
 import PostCard from './PostCard'
 import NewPost from './NewPost'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
-
-// const posts = {
-//   _id: '1',
-//   description: 'This is a post',
-//   userId: user,
-//   createdAt: '2023-05-25',
-// }
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
@@ -37,7 +29,6 @@ function MainSection() {
     const allPostData = await contract.methods
       .getPosts()
       .call({ from: accounts[0] })
-
 
     return allPostData
   }
@@ -73,7 +64,6 @@ function MainSection() {
       }
     }
   }, [allPostData])
-
 
   const tempPosts = []
 
@@ -112,11 +102,6 @@ function MainSection() {
       fetchPosts()
     }
   }, [postContent])
-
-  // useEffect(() => {
-  //   console.log(posts)
-  // }, [posts])
-
 
   return (
     <div>

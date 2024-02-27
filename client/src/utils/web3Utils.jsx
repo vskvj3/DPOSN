@@ -1,7 +1,3 @@
-import React, { useState, useContext } from 'react'
-import EthContext from '../contexts/EthContext'
-import Web3 from 'web3'
-
 /**
  * get user data from a user address
  * @param {*} userAddress
@@ -20,7 +16,7 @@ async function fetchUserData(userAddress, contract, accounts) {
 }
 
 /**
- *
+ * fetch all existing posts
  * @param {*} contract
  * @param {*} accounts
  * @returns {*}

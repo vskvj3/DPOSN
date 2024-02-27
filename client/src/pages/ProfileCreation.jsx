@@ -7,7 +7,7 @@ import NoProfile from '../assets/images/userprofile.png'
 import Cookies from 'js-cookie'
 import Web3 from 'web3'
 import { BiCamera } from 'react-icons/bi'
-import { pinFileToIPFS } from '../ipfs-utils/PinataUtils'
+import { pinFileToIPFS } from '../utils/PinataUtils'
 
 const date = new Date()
 

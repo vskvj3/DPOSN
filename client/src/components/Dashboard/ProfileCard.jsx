@@ -4,6 +4,7 @@ import moment from 'moment'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
 import NoProfile from '../../assets/images/userprofile.png'
+import { fetchUserData } from '../../utils/web3Utils'
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
 function ProfileCard() {
@@ -11,31 +12,21 @@ function ProfileCard() {
     state: { contract, accounts },
   } = useContext(EthContext)
 
-  async function init() {
-    const data = await contract.methods
-      .getUser(accounts[0])
-      .call({ from: accounts[0] })
-      .catch((err) => {
-        console.log(err)
-      })
-    return data
-  }
-
   const [user, setUser] = useState({
     userName: '',
     imageCID: '',
-    firstName: 'Visakh',
-    lastName: 'Vijay',
+    firstName: '',
+    lastName: '',
     image: 'https://docs.material-tailwind.com/img/face-2.jpg',
-    friends: ['one', 'two'],
-    views: 5,
-    createdAt: '2024-02-20',
-    status: 'being me',
+    friends: [],
+    views: null,
+    createdAt: '',
+    status: '',
   })
 
   useEffect(() => {
     if (contract != null) {
-      const userData = init()
+      const userData = fetchUserData(accounts[0], contract, accounts)
       userData.then((data) => {
         setUser({
           ...user,

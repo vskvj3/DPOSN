@@ -1,16 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react'
-// import { user } from '../../assets/tempdata'
 import PostCard from './PostCard'
 import NewPost from './NewPost'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
-
-// const posts = {
-//   _id: '1',
-//   description: 'This is a post',
-//   userId: user,
-//   createdAt: '2023-05-25',
-// }
+import { fetchUserData, fetchAllPosts } from '../../utils/web3Utils'
+import { fetchJSONFromIPFS } from '../../utils/PinataUtils'
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
@@ -23,36 +17,9 @@ function MainSection() {
     state: { contract, accounts },
   } = useContext(EthContext)
 
-  async function fetchUserData(userAddress) {
-    const data = await contract.methods
-      .getUser(userAddress)
-      .call({ from: accounts[0] })
-      .catch((err) => {
-        console.log(err)
-      })
-    return data
-  }
-
-  async function fetchAllPosts() {
-    const allPostData = await contract.methods
-      .getPosts()
-      .call({ from: accounts[0] })
-
-
-    return allPostData
-  }
-
-  async function fetchContentFromIPFS(postCID) {
-    const content = await fetch(`${PINATA_GATEWAY}/ipfs/${postCID}`, {
-      method: 'GET',
-      headers: { accept: 'text/plain' },
-    })
-    return await content.json()
-  }
-
   useEffect(() => {
     if (contract != null) {
-      const fetchedData = fetchAllPosts()
+      const fetchedData = fetchAllPosts(contract, accounts)
       fetchedData.then((data) => {
         setAllPostData(data)
       })
@@ -64,7 +31,7 @@ function MainSection() {
   useEffect(() => {
     if (allPostData.length != 0 && postContent.length === 0) {
       for (let i = 0; i < allPostData.length; i++) {
-        const fetchedContent = fetchContentFromIPFS(allPostData[i].postCID)
+        const fetchedContent = fetchJSONFromIPFS(allPostData[i].postCID)
 
         fetchedContent.then((data) => {
           tempContent.push(data)
@@ -74,13 +41,16 @@ function MainSection() {
     }
   }, [allPostData])
 
-
   const tempPosts = []
 
   async function fetchPosts() {
     if (postContent.length != 0 && posts.length === 0) {
       for (let i = 0; i < postContent.length; i++) {
-        const fetchedUserData = await fetchUserData(allPostData[i].userAddress)
+        const fetchedUserData = await fetchUserData(
+          allPostData[i].userAddress,
+          contract,
+          accounts
+        )
         console.log(fetchedUserData)
 
         tempPosts.push({
@@ -112,11 +82,6 @@ function MainSection() {
       fetchPosts()
     }
   }, [postContent])
-
-  // useEffect(() => {
-  //   console.log(posts)
-  // }, [posts])
-
 
   return (
     <div>

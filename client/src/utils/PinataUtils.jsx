@@ -3,7 +3,7 @@ const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
 /**
  * Pin file to IPFS using Pinata API
- * @param {File} file Image file to upload to IPFS 
+ * @param {File} file Image file to upload to IPFS
  * @returns {String} CID of the file uploaded to IPFS
  */
 async function pinFileToIPFS(file) {
@@ -11,7 +11,7 @@ async function pinFileToIPFS(file) {
     const formData = new FormData()
     formData.append('file', file)
 
-    const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+    const res = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${PINATA_JWT}`,
@@ -28,12 +28,12 @@ async function pinFileToIPFS(file) {
 
 /**
  * Pin JSON object to IPFS using Pinata API
- * @param {JSON} json JSON object to upload to IPFS 
+ * @param {JSON} json JSON object to upload to IPFS
  * @returns {String | null} CID of the JSON object uploaded to IPFS or null if upload fails
  */
 async function pinJSONToIPFS(json) {
   try {
-    const res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
+    const res = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${PINATA_JWT}`,
@@ -49,4 +49,17 @@ async function pinJSONToIPFS(json) {
   }
 }
 
-export { pinFileToIPFS, pinJSONToIPFS }
+/**
+ *
+ * @param {String} CID cid hash of the file
+ * @returns {JSON} data as json
+ */
+async function fetchJSONFromIPFS(CID) {
+  const content = await fetch(`${PINATA_GATEWAY}/ipfs/${CID}`, {
+    method: 'GET',
+    headers: { accept: 'text/plain' },
+  })
+  return await content.json()
+}
+
+export { pinFileToIPFS, pinJSONToIPFS, fetchJSONFromIPFS }

@@ -1,56 +1,69 @@
 import React, { useState, useContext, useEffect } from 'react'
+// import { user } from '../../assets/tempdata'
 import PostCard from './PostCard'
 import NewPost from './NewPost'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
-import { fetchUserData, fetchAllPosts } from '../../utils/web3Utils'
-import { fetchJSONFromIPFS } from '../../utils/PinataUtils'
+
+// const posts = {
+//   _id: '1',
+//   description: 'This is a post',
+//   userId: user,
+//   createdAt: '2023-05-25',
+// }
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
 function MainSection() {
   const [posts, setPosts] = useState([])
-  const [allPostData, setAllPostData] = useState([])
-  const [postContent, setPostContent] = useState([])
 
   const {
     state: { contract, accounts },
   } = useContext(EthContext)
 
-  useEffect(() => {
-    if (contract != null) {
-      const fetchedData = fetchAllPosts(contract, accounts)
-      fetchedData.then((data) => {
-        setAllPostData(data)
+  async function fetchUserData(userAddress) {
+    const data = await contract.methods
+      .getUser(userAddress)
+      .call({ from: accounts[0] })
+      .catch((err) => {
+        console.log(err)
       })
-    }
-  }, [contract])
+    return data
+  }
 
-  const tempContent = []
+  async function fetchAllPosts() {
+    const allPostData = await contract.methods
+      .getPosts()
+      .call({ from: accounts[0] })
 
-  useEffect(() => {
-    if (allPostData.length != 0 && postContent.length === 0) {
-      for (let i = 0; i < allPostData.length; i++) {
-        const fetchedContent = fetchJSONFromIPFS(allPostData[i].postCID)
+    return allPostData
+  }
 
-        fetchedContent.then((data) => {
-          tempContent.push(data)
-          setPostContent(tempContent)
-        })
-      }
-    }
-  }, [allPostData])
-
-  const tempPosts = []
+  async function fetchContentFromIPFS(postCID) {
+    const content = await fetch(`${PINATA_GATEWAY}/ipfs/${postCID}`, {
+      method: 'GET',
+      headers: { accept: 'text/plain' },
+    })
+    return await content.json()
+  }
 
   async function fetchPosts() {
-    if (postContent.length != 0 && posts.length === 0) {
-      for (let i = 0; i < postContent.length; i++) {
-        const fetchedUserData = await fetchUserData(
-          allPostData[i].userAddress,
-          contract,
-          accounts
+    const allPostData = await fetchAllPosts()
+
+    const postContent = []
+
+    if (allPostData.length != 0) {
+      for (let i = 0; i < allPostData.length; i++) {
+        const fetchedContent = await fetchContentFromIPFS(
+          allPostData[i].postCID
         )
+        postContent.push(fetchedContent)
+      }
+
+      const tempPosts = []
+
+      for (let i = 0; i < postContent.length; i++) {
+        const fetchedUserData = await fetchUserData(allPostData[i].userAddress)
         console.log(fetchedUserData)
 
         tempPosts.push({
@@ -72,16 +85,17 @@ function MainSection() {
 
       console.log('posts from mainsection:')
       console.log(tempPosts)
+      tempPosts.reverse()
 
       setPosts(tempPosts)
     }
   }
 
   useEffect(() => {
-    if (postContent.length != 0 && posts.length === 0) {
+    if (contract != null) {
       fetchPosts()
     }
-  }, [postContent])
+  }, [contract])
 
   return (
     <div>

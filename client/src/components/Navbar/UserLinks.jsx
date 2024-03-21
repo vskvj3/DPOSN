@@ -1,9 +1,39 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { FaEthereum } from 'react-icons/fa'
 
 function UserLinks() {
+  // check status of metamask connection
+  const [connectionStatus, setConnectionStatus] = React.useState(false)
+
+  useEffect(() => {
+    if (window.ethereum) {
+      if (window.ethereum.isMetaMask) {
+        window.ethereum
+          .request({ method: 'eth_accounts' })
+          .then((accounts) => {
+            if (accounts.length > 0) {
+              setConnectionStatus(true)
+            }
+          })
+          .catch((error) => {
+            console.error(error)
+          })
+      }
+    }
+  }, [window.ethereum])
+
   return (
     <>
       <div className="flex justify-center items-center cursor-pointer">
+        {connectionStatus ? (
+          <div className=" bg-green-400 rounded-xl py-1 px-3 mr-1 text-gray-700">
+            <FaEthereum />
+          </div>
+        ) : (
+          <div className=" bg-red-400 rounded-xl py-1 px-3 mr-1 text-gray-700">
+            <FaEthereum />
+          </div>
+        )}
         <div className="hover:translate-y-1 duration-500 ease-in-out hover:text-blue-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -56,24 +56,25 @@ function MainSection() {
     if (allPostData.length != 0) {
       for (let i = 0; i < allPostData.length; i++) {
         const fetchedContent = await fetchJSONFromIPFS(allPostData[i].postCID)
+        const fetchedUserData = await fetchUserData(allPostData[i].userAddress)
         if (fetchedContent != null) {
-          postContent.push(fetchedContent)
+          postContent.push({ ...fetchedContent, ...fetchedUserData })
         }
       }
 
       const tempPosts = []
 
-      for (let i = 0; i < postContent.length; i++) {
-        const fetchedUserData = await fetchUserData(allPostData[i].userAddress)
+      console.log(postContent)
 
+      for (let i = 0; i < postContent.length; i++) {
         tempPosts.push({
           _id: allPostData[i].postCID,
-          profileUrl: fetchedUserData.imageCID
-            ? `${PINATA_GATEWAY}/ipfs/${fetchedUserData.imageCID}`
+          profileUrl: postContent[i].imageCID
+            ? `${PINATA_GATEWAY}/ipfs/${postContent[i].imageCID}`
             : '',
 
           userName: Web3.utils
-            .hexToAscii(fetchedUserData.userName)
+            .hexToAscii(postContent[i].userName)
             .replace(/\0.*$/g, ''),
           createdAt: postContent[i].time,
           image: postContent[i].image

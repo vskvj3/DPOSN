@@ -55,11 +55,15 @@ async function pinJSONToIPFS(json) {
  * @returns {JSON} data as json
  */
 async function fetchJSONFromIPFS(CID) {
-  const content = await fetch(`${PINATA_GATEWAY}/ipfs/${CID}`, {
-    method: 'GET',
-    headers: { accept: 'text/plain' },
-  })
-  return await content.json()
+  try {
+    const content = await fetch(`${PINATA_GATEWAY}/ipfs/${CID}`, {
+      method: 'GET',
+      headers: { accept: 'text/plain' },
+    })
+    return await content.json()
+  } catch (error) {
+    return null
+  }
 }
 
 export { pinFileToIPFS, pinJSONToIPFS, fetchJSONFromIPFS }

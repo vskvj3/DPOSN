@@ -1,13 +1,30 @@
 import { Routes, Route } from 'react-router-dom'
 import './App.css'
-import React from 'react'
+import React, { useEffect } from 'react'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
 import ProfileCreation from './pages/ProfileCreation'
 import Pages from './pages/Pages'
 import ProfilePage from './pages/Profile'
+import Cookies from 'js-cookie'
 
 function App() {
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on('chainChanged', () => {
+        Cookies.remove('user')
+        Cookies.remove('loggedIn')
+        window.location.reload()
+      })
+      window.ethereum.on('accountsChanged', () => {
+        console.log('changed')
+        Cookies.remove('user')
+        Cookies.remove('loggedIn')
+        window.location.reload()
+      })
+    }
+  })
+
   return (
     <>
       <Routes>

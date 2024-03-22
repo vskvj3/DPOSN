@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
 import NoProfile from '/src/assets/images/userprofile.png'
+import { MdAddCircleOutline } from 'react-icons/md'
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
@@ -95,8 +96,9 @@ function UserListCard() {
                 {user?.status ? user?.status : ''}
               </span>
             </div>
-            <button className="hover:bg-primary-600 bg-[#0444a4] text-white font-semibold py-1 px-2 rounded-md">
-              Follow
+            <button className="flex items-center hover:bg-primary-600 bg-[#0444a4] text-white font-semibold py-1 px-2 rounded-md">
+              <MdAddCircleOutline className="mr-1" />
+              <span>Add</span>
             </button>
           </div>
         ))}

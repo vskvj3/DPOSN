@@ -67,6 +67,20 @@ function MainSection() {
       console.log(postContent)
 
       for (let i = 0; i < postContent.length; i++) {
+        let commentCID = ''
+
+        try {
+          commentCID = await contract.methods
+            .getComment(allPostData[i].postCID)
+            .call({ from: accounts[0] })
+        } catch (error) {}
+
+        let commentData = []
+
+        if (commentCID) {
+          commentData = await fetchJSONFromIPFS(commentCID)
+        }
+
         tempPosts.push({
           _id: allPostData[i].postCID,
           profileUrl: postContent[i].imageCID
@@ -81,6 +95,7 @@ function MainSection() {
             ? `${PINATA_GATEWAY}/ipfs/${postContent[i].image}`
             : '',
           description: postContent[i].post,
+          comment: commentData,
         })
       }
 
@@ -89,6 +104,8 @@ function MainSection() {
       setPosts(tempPosts)
     }
   }
+
+  const [comment, setComment] = useState()
 
   useEffect(() => {
     if (contract != null) {
@@ -105,6 +122,7 @@ function MainSection() {
           post={post}
           deletePost={() => {}}
           likePost={() => {}}
+          comments={post.comment}
         />
       ))}
     </div>

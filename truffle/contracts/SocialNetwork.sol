@@ -74,7 +74,6 @@ contract SocialNetwork {
     struct post {
         address userAddress;
         string postCID;
-        string commentCID;
     }
 
     // string[] postList;
@@ -94,15 +93,25 @@ contract SocialNetwork {
     // }
 
     post[] allPostData;
+    mapping(string => string) allComments;
 
     function addPost(string memory _PostCID) public {
         require(
             accounts[msg.sender].userAddress == msg.sender,
             "User doesn't exist"
         );
-        allPostData.push(
-            post({userAddress: msg.sender, postCID: _PostCID, commentCID: ""})
+        allPostData.push(post({userAddress: msg.sender, postCID: _PostCID}));
+    }
+
+    function addComment(
+        string memory _postCID,
+        string memory _CommentCID
+    ) public {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
         );
+        allComments[_postCID] = _CommentCID;
     }
 
     function getPosts() public view returns (post[] memory) {
@@ -111,5 +120,21 @@ contract SocialNetwork {
             "User doesn't exist"
         );
         return allPostData;
+    }
+
+    function getComment(
+        string memory _postCID
+    ) public view returns (string memory) {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
+        );
+
+        require(
+            abi.encodePacked(allComments[_postCID]).length > 0,
+            "No comments"
+        );
+
+        return allComments[_postCID];
     }
 }

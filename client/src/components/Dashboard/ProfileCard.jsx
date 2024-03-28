@@ -1,49 +1,15 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { LiaEditSolid } from 'react-icons/lia'
 import moment from 'moment'
-import EthContext from '../../contexts/EthContext'
-import Web3 from 'web3'
+import UserContext from '../../contexts/UserContext'
 import NoProfile from '../../assets/images/userprofile.png'
-import { fetchUserData } from '../../utils/web3Utils'
+
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
 function ProfileCard() {
-  const {
-    state: { contract, accounts },
-  } = useContext(EthContext)
+  const user = useContext(UserContext)
 
-  const [user, setUser] = useState({
-    userName: '',
-    imageCID: '',
-    firstName: '',
-    lastName: '',
-    image: 'https://docs.material-tailwind.com/img/face-2.jpg',
-    friends: [],
-    views: null,
-    createdAt: '',
-    status: '',
-  })
-
-  useEffect(() => {
-    if (contract != null) {
-      const userData = fetchUserData(accounts[0], contract, accounts)
-      userData.then((data) => {
-        setUser({
-          ...user,
-          userName: Web3.utils.hexToAscii(data.userName).replace(/\0.*$/g, ''),
-          firstName: Web3.utils
-            .hexToAscii(data.firstName)
-            .replace(/\0.*$/g, ''),
-          lastName: Web3.utils.hexToAscii(data.lastName).replace(/\0.*$/g, ''),
-          imageCID: data.imageCID,
-          status: Web3.utils.hexToAscii(data.status).replace(/\0.*$/g, ''),
-        })
-        // console.log(data)
-        console.log(data.imageCID)
-      })
-    }
-  }, [contract])
-
+  console.log('user :', user)
   return (
     /* Rainbow border */
     <div className="w-full rounded-xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">

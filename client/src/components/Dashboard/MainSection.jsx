@@ -4,6 +4,7 @@ import PostCard from './PostCard'
 import NewPost from './NewPost'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
+import { fetchJSONFromIPFS } from '../../utils/PinataUtils'
 
 // const posts = {
 //   _id: '1',
@@ -39,13 +40,13 @@ function MainSection() {
     return allPostData
   }
 
-  async function fetchContentFromIPFS(postCID) {
-    const content = await fetch(`${PINATA_GATEWAY}/ipfs/${postCID}`, {
-      method: 'GET',
-      headers: { accept: 'text/plain' },
-    })
-    return await content.json()
-  }
+  // async function fetchContentFromIPFS(postCID) {
+  //   const content = await fetch(`${PINATA_GATEWAY}/ipfs/${postCID}`, {
+  //     method: 'GET',
+  //     headers: { accept: 'text/plain' },
+  //   })
+  //   return await content.json()
+  // }
 
   async function fetchPosts() {
     const allPostData = await fetchAllPosts()
@@ -54,42 +55,57 @@ function MainSection() {
 
     if (allPostData.length != 0) {
       for (let i = 0; i < allPostData.length; i++) {
-        const fetchedContent = await fetchContentFromIPFS(
-          allPostData[i].postCID
-        )
-        postContent.push(fetchedContent)
+        const fetchedContent = await fetchJSONFromIPFS(allPostData[i].postCID)
+        const fetchedUserData = await fetchUserData(allPostData[i].userAddress)
+        if (fetchedContent != null) {
+          postContent.push({ ...fetchedContent, ...fetchedUserData })
+        }
       }
 
       const tempPosts = []
 
+      console.log(postContent)
+
       for (let i = 0; i < postContent.length; i++) {
-        const fetchedUserData = await fetchUserData(allPostData[i].userAddress)
-        console.log(fetchedUserData)
+        let commentCID = ''
+
+        try {
+          commentCID = await contract.methods
+            .getComment(allPostData[i].postCID)
+            .call({ from: accounts[0] })
+        } catch (error) {}
+
+        let commentData = []
+
+        if (commentCID) {
+          commentData = await fetchJSONFromIPFS(commentCID)
+        }
 
         tempPosts.push({
           _id: allPostData[i].postCID,
-          profileUrl: fetchedUserData.imageCID
-            ? `${PINATA_GATEWAY}/ipfs/${fetchedUserData.imageCID}`
+          profileUrl: postContent[i].imageCID
+            ? `${PINATA_GATEWAY}/ipfs/${postContent[i].imageCID}`
             : '',
 
           userName: Web3.utils
-            .hexToAscii(fetchedUserData.userName)
+            .hexToAscii(postContent[i].userName)
             .replace(/\0.*$/g, ''),
           createdAt: postContent[i].time,
           image: postContent[i].image
             ? `${PINATA_GATEWAY}/ipfs/${postContent[i].image}`
             : '',
           description: postContent[i].post,
+          comment: commentData,
         })
       }
 
-      console.log('posts from mainsection:')
-      console.log(tempPosts)
       tempPosts.reverse()
 
       setPosts(tempPosts)
     }
   }
+
+  const [comment, setComment] = useState()
 
   useEffect(() => {
     if (contract != null) {
@@ -106,6 +122,7 @@ function MainSection() {
           post={post}
           deletePost={() => {}}
           likePost={() => {}}
+          comments={post.comment}
         />
       ))}
     </div>

@@ -122,6 +122,22 @@ contract SocialNetwork {
         allComments[_postCID] = _CommentCID;
     }
 
+    function getComment(
+        string memory _postCID
+    ) public view returns (string memory) {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
+        );
+
+        require(
+            abi.encodePacked(allComments[_postCID]).length > 0,
+            "No comments"
+        );
+
+        return allComments[_postCID];
+    }
+
     function getPosts() public view returns (post[] memory) {
         require(
             accounts[msg.sender].userAddress == msg.sender,

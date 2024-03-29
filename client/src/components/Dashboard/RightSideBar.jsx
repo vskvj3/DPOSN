@@ -22,11 +22,11 @@ function RightSideBar() {
       const followedUsers = await contract.methods
         .getFollowedUsers()
         .call({ from: accounts[0] })
-      const tempUserList = []
+      const tempUserLists = []
 
       for (const userAddress of followedUsers) {
         const userData = await fetchUserData(userAddress)
-        tempUserList.push({
+        tempUserLists.push({
           _id: userData.userAddress,
           profileUrl: userData.imageCID
             ? `${PINATA_GATEWAY}/ipfs/${userData.imageCID}`
@@ -38,7 +38,7 @@ function RightSideBar() {
         })
       }
 
-      setFollowedUsers(tempUserList)
+      setFollowedUsers(tempUserLists)
     } catch (error) {
       console.error('Error fetching followed users:', error)
     }

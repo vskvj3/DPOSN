@@ -41,7 +41,7 @@ function UserListCard() {
     return data
   }
   async function fetchUsers() {
-    const tempUserList = []
+    const tempUserLists = []
 
     for (const userAddress of allUsersAddress) {
       if (
@@ -50,7 +50,7 @@ function UserListCard() {
         userAddress.toLowerCase() !== accounts[0].toLowerCase()
       ) {
         const userData = await fetchUserData(userAddress)
-        tempUserList.push({
+        tempUserLists.push({
           _id: userData.userAddress,
           profileUrl: userData.imageCID
             ? `${PINATA_GATEWAY}/ipfs/${userData.imageCID}`
@@ -63,7 +63,7 @@ function UserListCard() {
       }
     }
 
-    setUsers(tempUserList)
+    setUsers(tempUserLists)
   }
 
   async function followUser(userAddress) {

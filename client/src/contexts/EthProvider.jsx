@@ -55,7 +55,6 @@ function EthProvider({ children }) {
       console.log('Initial currentUserFollowing:', state.currentUserFollowing)
     }
     init()
-    console.log('Initial currentUserFollowing:', state.currentUserFollowing)
   }, [])
 
   return (

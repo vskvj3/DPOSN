@@ -158,4 +158,5 @@ contract SocialNetwork {
     function getFollowersCount(address userAddress) public view returns (uint) {
         return accounts[userAddress].followersCount;
     }
+    
 }

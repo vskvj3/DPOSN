@@ -49,7 +49,7 @@ contract SocialNetwork {
             followers: new address[](0),
             following: new address[](0),
             followersCount: 0,
-            followingCount: 0  
+            followingCount: 0
         });
     }
 
@@ -82,7 +82,6 @@ contract SocialNetwork {
     struct post {
         address userAddress;
         string postCID;
-        string commentCID;
     }
 
     // string[] postList;
@@ -102,15 +101,25 @@ contract SocialNetwork {
     // }
 
     post[] allPostData;
+    mapping(string => string) allComments;
 
     function addPost(string memory _PostCID) public {
         require(
             accounts[msg.sender].userAddress == msg.sender,
             "User doesn't exist"
         );
-        allPostData.push(
-            post({userAddress: msg.sender, postCID: _PostCID, commentCID: ""})
+        allPostData.push(post({userAddress: msg.sender, postCID: _PostCID}));
+    }
+
+    function addComment(
+        string memory _postCID,
+        string memory _CommentCID
+    ) public {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
         );
+        allComments[_postCID] = _CommentCID;
     }
 
     function getPosts() public view returns (post[] memory) {
@@ -125,11 +134,20 @@ contract SocialNetwork {
         require(_currentUser != _userToFollow, "Cannot follow yourself");
 
         // Ensure both users exist
-        require(accounts[_currentUser].userAddress != address(0), "Current user does not exist");
-        require(accounts[_userToFollow].userAddress != address(0), "User to follow does not exist");
+        require(
+            accounts[_currentUser].userAddress != address(0),
+            "Current user does not exist"
+        );
+        require(
+            accounts[_userToFollow].userAddress != address(0),
+            "User to follow does not exist"
+        );
 
         // Check if the current user is already following the user to follow
-        require(!isFollowing(_currentUser, _userToFollow), "Already following this user");
+        require(
+            !isFollowing(_currentUser, _userToFollow),
+            "Already following this user"
+        );
 
         // Add the user to follow to the following list of the current user
         accounts[_currentUser].following.push(_userToFollow);
@@ -141,7 +159,10 @@ contract SocialNetwork {
     }
 
     // Function to check if a user is already following another user
-    function isFollowing(address _currentUser, address _userToFollow) internal view returns (bool) {
+    function isFollowing(
+        address _currentUser,
+        address _userToFollow
+    ) internal view returns (bool) {
         address[] storage following = accounts[_currentUser].following;
         for (uint i = 0; i < following.length; i++) {
             if (following[i] == _userToFollow) {
@@ -154,9 +175,8 @@ contract SocialNetwork {
     function getFollowedUsers() public view returns (address[] memory) {
         return accounts[msg.sender].following;
     }
-    
+
     function getFollowersCount(address userAddress) public view returns (uint) {
         return accounts[userAddress].followersCount;
     }
-    
 }

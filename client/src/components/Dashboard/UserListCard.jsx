@@ -8,31 +8,27 @@ const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 function UserListCard() {
   const [allUsersAddress, setAllUsersAddress] = useState([])
   const [users, setUsers] = useState([])
-  const tempUserList = []
   const {
-    state: { contract, accounts },
+    state: { contract, accounts, currentUserFollowing },
+    dispatch,
   } = useContext(EthContext)
   useEffect(() => {
     if (contract != null) {
-      const fetchedData = fetchAllUsers()
-      fetchedData.then((data) => {
-        setAllUsersAddress(data)
-      })
+      fetchAllUsers()
     }
   }, [contract])
 
   useEffect(() => {
-    if (allUsersAddress) {
+    if (allUsersAddress.length > 0 && currentUserFollowing != undefined) {
       fetchUsers()
     }
-  }, [allUsersAddress])
+  }, [allUsersAddress, currentUserFollowing])
 
   async function fetchAllUsers() {
     const allUsers = await contract.methods
       .getAllUsers()
       .call({ from: accounts[0] })
-
-    return allUsers
+    setAllUsersAddress(allUsers)
   }
 
   async function fetchUserData(userAddress) {
@@ -45,32 +41,53 @@ function UserListCard() {
     return data
   }
   async function fetchUsers() {
-    if (allUsersAddress) {
-      for (let i = 0; i < allUsersAddress.length; i++) {
-        if (allUsersAddress[i].toLowerCase() === accounts[0].toLowerCase()) {
-          console.log('user found')
-          continue
-        }
-        const fetchedUserData = await fetchUserData(allUsersAddress[i])
-        console.log(fetchedUserData)
+    const tempUserLists = []
 
-        tempUserList.push({
-          _id: fetchedUserData.userAddress,
-          profileUrl: fetchedUserData.imageCID
-            ? `${PINATA_GATEWAY}/ipfs/${fetchedUserData.imageCID}`
+    for (const userAddress of allUsersAddress) {
+      if (
+        currentUserFollowing != undefined &&
+        !currentUserFollowing.includes(userAddress) &&
+        userAddress.toLowerCase() !== accounts[0].toLowerCase()
+      ) {
+        const userData = await fetchUserData(userAddress)
+        tempUserLists.push({
+          _id: userData.userAddress,
+          profileUrl: userData.imageCID
+            ? `${PINATA_GATEWAY}/ipfs/${userData.imageCID}`
             : '',
           userName: Web3.utils
-            .hexToAscii(fetchedUserData.userName)
+            .hexToAscii(userData.userName)
             .replace(/\0.*$/g, ''),
-          status: Web3.utils
-            .hexToAscii(fetchedUserData.status)
-            .replace(/\0.*$/g, ''),
+          status: Web3.utils.hexToAscii(userData.status).replace(/\0.*$/g, ''),
         })
       }
-      console.log('posts from mainsection:')
-      console.log(tempUserList)
-      setUsers(tempUserList)
     }
+
+    setUsers(tempUserLists)
+  }
+
+  async function followUser(userAddress) {
+    try {
+      if (!userAddress) {
+        throw new Error('User address is required')
+      }
+      console.log('Following user:', userAddress)
+      // Add logging for contract method call
+      console.log('Calling followUser method with address:', userAddress)
+      await contract.methods
+        .followUser(accounts[0], userAddress)
+        .send({ from: accounts[0] })
+      dispatch({ type: 'FOLLOW_USER', payload: userAddress })
+      fetchUsers() // Assuming this function updates the user list after following a user
+      window.location.reload()
+    } catch (error) {
+      console.error('Error following user:', error.message)
+      // Handle the error (e.g., display an error message to the user)
+    }
+  }
+
+  if (currentUserFollowing === undefined) {
+    return <div>Loading...</div>
   }
   return (
     <div className="w-full bg-white shadow-xl rounded-lg px-6 py-5 mt-4">
@@ -95,7 +112,10 @@ function UserListCard() {
                 {user?.status ? user?.status : ''}
               </span>
             </div>
-            <button className="hover:bg-primary-600 bg-[#0444a4] text-white font-semibold py-1 px-2 rounded-md">
+            <button
+              onClick={() => followUser(user._id)}
+              className="hover:bg-primary-600 bg-[#0444a4] text-white font-semibold py-1 px-2 rounded-md"
+            >
               Follow
             </button>
           </div>

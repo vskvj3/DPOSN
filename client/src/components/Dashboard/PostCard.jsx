@@ -48,12 +48,6 @@ function PostCard({ post, deletePost, likePost, comments }) {
 
     console.log(commentCID)
 
-    // const content = await fetch(`${PINATA_GATEWAY}/ipfs/${postCID}`, {
-    //   method: 'GET',
-    //   headers: { accept: 'text/plain' },
-    // })
-    // console.log(await content.json())
-
     await contract.methods
       .addComment(post._id, commentCID)
       .send({ from: accounts[0] })
@@ -140,7 +134,7 @@ function PostCard({ post, deletePost, likePost, comments }) {
             }}
           >
             <BiComment size={20} />
-            {post?.comments?.length} Comments
+            {comments?.length} Comments
           </p>
 
           {accounts[0] === post?.userId?._id && (

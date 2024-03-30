@@ -4,20 +4,18 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 import { MdReportGmailerrorred } from 'react-icons/md'
 import { BiComment, BiLike, BiSolidLike } from 'react-icons/bi'
-import { MdOutlineDeleteOutline } from 'react-icons/md'
+import { CiWarning } from 'react-icons/ci'
 import CommentSection from './CommentSection'
 import EthContext from '../../contexts/EthContext'
 import { pinFileToIPFS, pinJSONToIPFS } from '../../utils/PinataUtils'
 import UserContext from '../../contexts/UserContext'
 
-const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
-
-function PostCard({ post, deletePost, comments, likes }) {
+function PostCard({ post, comments, likes, reports }) {
   const [showAll, setShowAll] = useState(0)
   const [newComment, setNewComment] = useState('')
   // const [loading, setLoading] = useState(false)
   const [showComments, setShowComments] = useState(false)
-  const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
+  const [blurred, setBlurred] = useState(reports?.length > 0 ? true : false)
 
   const userData = useContext(UserContext)
 
@@ -67,9 +65,37 @@ function PostCard({ post, deletePost, comments, likes }) {
     await contract.methods.addLikes(postId, likeCID).send({ from: accounts[0] })
   }
 
+  async function reportPost(postId) {
+    if (post.reports.includes(accounts[0])) {
+      console.log('You already reported')
+      // post.likes = post.likes.filter((like) => like !== accounts[0])
+    } else {
+      post.reports.push(accounts[0])
+    }
+
+    const reportsCID = await pinJSONToIPFS(post.reports)
+
+    await contract.methods
+      .addReports(postId, reportsCID)
+      .send({ from: accounts[0] })
+  }
+
   return (
     <div>
       <div className="mb-2 bg-primary p-4 rounded-xl shadow-xl">
+        {reports?.length > 0 ? (
+          <div className="flex justify-between py-2 text-red-500 text-md">
+            <div className="flex justify-center">
+              <CiWarning size={28} />
+              <p>This post have been reported by {reports?.length} users</p>
+            </div>
+            <button type="button" onClick={() => setBlurred(false)}>
+              view
+            </button>
+          </div>
+        ) : (
+          ''
+        )}
         <div className="flex gap-3 items-center mb-2">
           <img
             src={post?.profileUrl ? post?.profileUrl : NoProfile}
@@ -89,40 +115,48 @@ function PostCard({ post, deletePost, comments, likes }) {
             </span>
           </div>
         </div>
+        <div className="relative z-0">
+          <div className={blurred ? 'blur-sm ' : ''}>
+            <p className="text-ascent-2">
+              {showAll === post?._id
+                ? post?.description
+                : post?.description.slice(0, 300)}
 
-        <div>
-          <p className="text-ascent-2">
-            {showAll === post?._id
-              ? post?.description
-              : post?.description.slice(0, 300)}
+              {post?.description?.length > 301 &&
+                (showAll === post?._id ? (
+                  <span
+                    className="text-blue ml-2 font-mediu cursor-pointer"
+                    onClick={() => setShowAll(0)}
+                  >
+                    Show Less
+                  </span>
+                ) : (
+                  <span
+                    className="text-blue ml-2 font-medium cursor-pointer"
+                    onClick={() => setShowAll(post?._id)}
+                  >
+                    Show More
+                  </span>
+                ))}
+            </p>
 
-            {post?.description?.length > 301 &&
-              (showAll === post?._id ? (
-                <span
-                  className="text-blue ml-2 font-mediu cursor-pointer"
-                  onClick={() => setShowAll(0)}
-                >
-                  Show Less
-                </span>
-              ) : (
-                <span
-                  className="text-blue ml-2 font-medium cursor-pointer"
-                  onClick={() => setShowAll(post?._id)}
-                >
-                  Show More
-                </span>
-              ))}
-          </p>
-
-          {post?.image && (
-            <img
-              src={post?.image}
-              alt="post image"
-              className="w-full mt-2 rounded-lg"
-            />
-          )}
+            {post?.image && (
+              <img
+                src={post?.image}
+                alt="post image"
+                className="w-full mt-2 rounded-lg"
+              />
+            )}
+          </div>
+          {/* <div className="absolute inset-0 flex justify-center items-center z-10">
+            <div className=" p-2 w-1/2 h-1/4 bg-slate-100 justify-center rounded-md shadow-inner opacity-85">
+              <p className=" justify-center blur-none">
+                This post have been reported by {reports?.length} users as
+                inapropriate
+              </p>
+            </div>
+          </div> */}
         </div>
-
         {}
         <div
           className="mt-4 flex justify-between items-center px-3 py-2 text-ascent-2
@@ -155,13 +189,12 @@ function PostCard({ post, deletePost, comments, likes }) {
           {/* report button */}
           <div
             className="flex gap-1 items-center text-base text-ascent-1 cursor-pointer"
-            onClick={() => deletePost(post?._id)}
+            onClick={() => reportPost(post?._id)}
           >
             <MdReportGmailerrorred size={20} color="red" />
             <span>Report</span>
           </div>
         </div>
-
         {/* Comments  */}
         {showComments === true && (
           <div>
@@ -211,6 +244,7 @@ PostCard.propTypes = {
   likePost: PropTypes.func,
   comments: PropTypes.array,
   likes: PropTypes.array,
+  reports: PropTypes.array,
 }
 
 export default PostCard

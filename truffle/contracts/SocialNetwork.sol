@@ -103,7 +103,9 @@ contract SocialNetwork {
     post[] allPostData;
     mapping(string => string) allComments;
     mapping(string => string) allLikes;
+    mapping(string => string) allReports;
 
+    // post section
     function addPost(string memory _PostCID) public {
         require(
             accounts[msg.sender].userAddress == msg.sender,
@@ -112,6 +114,15 @@ contract SocialNetwork {
         allPostData.push(post({userAddress: msg.sender, postCID: _PostCID}));
     }
 
+    function getPosts() public view returns (post[] memory) {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
+        );
+        return allPostData;
+    }
+
+    // comment section
     function addComment(
         string memory _postCID,
         string memory _CommentCID
@@ -139,6 +150,7 @@ contract SocialNetwork {
         return allComments[_postCID];
     }
 
+    // like section
     function addLikes(
         string memory _postCID,
         string memory _likesCID
@@ -164,13 +176,32 @@ contract SocialNetwork {
         return allLikes[_postCID];
     }
 
-    function getPosts() public view returns (post[] memory) {
+    // report section
+    function addReports(
+        string memory _postCID,
+        string memory _reportCID
+    ) public {
         require(
             accounts[msg.sender].userAddress == msg.sender,
             "User doesn't exist"
         );
-        return allPostData;
+        allReports[_postCID] = _reportCID;
     }
+
+    function getReports(
+        string memory _postCID
+    ) public view returns (string memory) {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
+        );
+        return allReports[_postCID];
+    }
+
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  Follow user functions                                                                                           //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     function followUser(address _currentUser, address _userToFollow) public {
         require(_currentUser != _userToFollow, "Cannot follow yourself");

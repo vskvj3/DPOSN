@@ -151,13 +151,17 @@ contract SocialNetwork {
     }
 
     function getLikes(
-        string memory _likesCID
+        string memory _postCID
     ) public view returns (string memory) {
         require(
             accounts[msg.sender].userAddress == msg.sender,
             "User doesn't exist"
         );
-        return allLikes[_likesCID];
+        require(
+            abi.encodePacked(allLikes[_postCID]).length > 0,
+            "No Likes"
+        );
+        return allLikes[_postCID];
     }
 
     function getPosts() public view returns (post[] memory) {

@@ -74,12 +74,15 @@ function MainSection() {
           commentCID = await contract.methods
             .getComment(allPostData[i].postCID)
             .call({ from: accounts[0] })
-
+        } catch (error) {
+          console.log('in comment: ', error)
+        }
+        try {
           likesCID = await contract.methods
             .getLikes(allPostData[i].postCID)
             .call({ from: accounts[0] })
         } catch (error) {
-          console.log(error)
+          console.log('in likes: ', error)
         }
 
         let commentData = []

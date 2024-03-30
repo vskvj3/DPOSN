@@ -12,7 +12,12 @@ import UserContext from '../../contexts/UserContext'
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
-function PostCard({ post, deletePost, likePost, comments }) {
+function PostCard({ post, deletePost, comments, likes }) {
+  console.log(post)
+  console.log('comments')
+  console.log(comments)
+  console.log('likes')
+  console.log(likes)
   const [showAll, setShowAll] = useState(0)
   const [newComment, setNewComment] = useState('')
   // const [loading, setLoading] = useState(false)
@@ -53,6 +58,18 @@ function PostCard({ post, deletePost, likePost, comments }) {
       .send({ from: accounts[0] })
 
     setNewComment('')
+  }
+
+  async function likePost(postId) {
+    if (post.likes.includes(accounts[0])) {
+      post.likes = post.likes.filter((like) => like !== accounts[0])
+    } else {
+      post.likes.push(accounts[0])
+    }
+
+    const likeCID = await pinJSONToIPFS(post.likes)
+
+    await contract.methods.addLikes(postId, likeCID).send({ from: accounts[0] })
   }
 
   return (
@@ -116,13 +133,16 @@ function PostCard({ post, deletePost, likePost, comments }) {
           className="mt-4 flex justify-between items-center px-3 py-2 text-ascent-2
       text-base border-t border-[#66666645]"
         >
-          <p className="flex gap-2 items-center text-base cursor-pointer">
-            {post?.likes?.includes(user?._id) ? (
+          <p
+            className="flex gap-2 items-center text-base cursor-pointer"
+            onClick={() => likePost(post?._id)}
+          >
+            {post.likes.includes(accounts[0]) ? (
               <BiSolidLike size={20} color="blue" />
             ) : (
               <BiLike size={20} />
             )}
-            {post?.likes?.length} Likes
+            {likes?.length} Likes
           </p>
 
           <p
@@ -196,6 +216,7 @@ PostCard.propTypes = {
   deletePost: PropTypes.func,
   likePost: PropTypes.func,
   comments: PropTypes.array,
+  likes: PropTypes.array,
 }
 
 export default PostCard

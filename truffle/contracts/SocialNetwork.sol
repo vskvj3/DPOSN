@@ -102,6 +102,7 @@ contract SocialNetwork {
 
     post[] allPostData;
     mapping(string => string) allComments;
+    mapping(string => string) allLikes;
 
     function addPost(string memory _PostCID) public {
         require(
@@ -136,6 +137,27 @@ contract SocialNetwork {
         );
 
         return allComments[_postCID];
+    }
+
+    function addLikes(
+        string memory _postCID,
+        string memory _likesCID
+    ) public {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
+        );
+        allLikes[_postCID] = _likesCID;
+    }
+
+    function getLikes(
+        string memory _likesCID
+    ) public view returns (string memory) {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
+        );
+        return allLikes[_likesCID];
     }
 
     function getPosts() public view returns (post[] memory) {

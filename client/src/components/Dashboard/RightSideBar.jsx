@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
 import NoProfile from '/src/assets/images/userprofile.png'
+import { Link } from 'react-router-dom'
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
@@ -64,21 +65,23 @@ function RightSideBar() {
 
         <div className="w-full flex flex-col gap-4 pt-4">
           {followedUsers.map((user) => (
-            <div key={user?._id} className="flex items-center justify-between">
-              <img
-                src={user?.profileUrl ? user?.profileUrl : NoProfile}
-                alt={user?.userName}
-                className="w-10 h-10 object-cover rounded-full"
-              />
-              <div className="flex-1 ml-4">
-                <p className="text-base font-medium text-ascent-1">
-                  {user?.userName ? user?.userName : 'User Name'}
-                </p>
-                <span className="text-sm text-ascent-2">
-                  {user?.status ? user?.status : ''}
-                </span>
+            <Link key={user?._id} to={'/profile?user=' + user?._id}>
+              <div className="flex items-center justify-between">
+                <img
+                  src={user?.profileUrl ? user?.profileUrl : NoProfile}
+                  alt={user?.userName}
+                  className="w-10 h-10 object-cover rounded-full"
+                />
+                <div className="flex-1 ml-4">
+                  <p className="text-base font-medium text-ascent-1">
+                    {user?.userName ? user?.userName : 'User Name'}
+                  </p>
+                  <span className="text-sm text-ascent-2">
+                    {user?.status ? user?.status : ''}
+                  </span>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

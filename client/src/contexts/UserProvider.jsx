@@ -16,8 +16,8 @@ function UserProvider({ children }) {
     firstName: '',
     lastName: '',
     image: NoProfile,
-    friends: [],
-    views: null,
+    followers: [],
+    following: [],
     createdAt: '',
     status: '',
   })
@@ -36,9 +36,11 @@ function UserProvider({ children }) {
           imageCID: data.imageCID,
           status: Web3.utils.hexToAscii(data.status).replace(/\0.*$/g, ''),
           address: accounts[0],
+          followers: data.followers,
+          following: data.following,
         })
         // console.log(data)
-        console.log(data.imageCID)
+        console.log(data.followers)
       })
     }
   }, [contract])

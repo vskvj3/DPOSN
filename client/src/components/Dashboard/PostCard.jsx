@@ -69,15 +69,15 @@ function PostCard({ post, comments, likes, reports }) {
     if (post.reports.includes(accounts[0])) {
       console.log('You already reported')
       // post.likes = post.likes.filter((like) => like !== accounts[0])
+
+      const reportsCID = await pinJSONToIPFS(post.reports)
+
+      await contract.methods
+        .addReports(postId, reportsCID)
+        .send({ from: accounts[0] })
     } else {
       post.reports.push(accounts[0])
     }
-
-    const reportsCID = await pinJSONToIPFS(post.reports)
-
-    await contract.methods
-      .addReports(postId, reportsCID)
-      .send({ from: accounts[0] })
   }
 
   return (

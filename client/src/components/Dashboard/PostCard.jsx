@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import NoProfile from '../../assets/images/userprofile.png'
 import moment from 'moment'
 import PropTypes from 'prop-types'
-// import { postComments } from '../../assets/tempdata'
+import { MdReportGmailerrorred } from 'react-icons/md'
 import { BiComment, BiLike, BiSolidLike } from 'react-icons/bi'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
 import CommentSection from './CommentSection'
@@ -13,11 +13,6 @@ import UserContext from '../../contexts/UserContext'
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
 function PostCard({ post, deletePost, comments, likes }) {
-  console.log(post)
-  console.log('comments')
-  console.log(comments)
-  console.log('likes')
-  console.log(likes)
   const [showAll, setShowAll] = useState(0)
   const [newComment, setNewComment] = useState('')
   // const [loading, setLoading] = useState(false)
@@ -157,15 +152,14 @@ function PostCard({ post, deletePost, comments, likes }) {
             {comments?.length} Comments
           </p>
 
-          {accounts[0] === post?.userId?._id && (
-            <div
-              className="flex gap-1 items-center text-base text-ascent-1 cursor-pointer"
-              onClick={() => deletePost(post?._id)}
-            >
-              <MdOutlineDeleteOutline size={20} />
-              <span>Delete</span>
-            </div>
-          )}
+          {/* report button */}
+          <div
+            className="flex gap-1 items-center text-base text-ascent-1 cursor-pointer"
+            onClick={() => deletePost(post?._id)}
+          >
+            <MdReportGmailerrorred size={20} color="red" />
+            <span>Report</span>
+          </div>
         </div>
 
         {/* Comments  */}

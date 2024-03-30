@@ -68,17 +68,29 @@ function MainSection() {
 
       for (let i = 0; i < postContent.length; i++) {
         let commentCID = ''
+        let likesCID = ''
 
         try {
           commentCID = await contract.methods
             .getComment(allPostData[i].postCID)
             .call({ from: accounts[0] })
-        } catch (error) {}
+
+          likesCID = await contract.methods
+            .getLikes(allPostData[i].postCID)
+            .call({ from: accounts[0] })
+        } catch (error) {
+          console.log(error)
+        }
 
         let commentData = []
+        let likesData = []
 
         if (commentCID) {
           commentData = await fetchJSONFromIPFS(commentCID)
+        }
+
+        if (likesCID) {
+          likesData = await fetchJSONFromIPFS(likesCID)
         }
 
         tempPosts.push({
@@ -96,6 +108,7 @@ function MainSection() {
             : '',
           description: postContent[i].post,
           comment: commentData,
+          likes: likesData,
         })
       }
 
@@ -121,8 +134,8 @@ function MainSection() {
           key={post?._id}
           post={post}
           deletePost={() => {}}
-          likePost={() => {}}
           comments={post.comment}
+          likes={post.likes}
         />
       ))}
     </div>

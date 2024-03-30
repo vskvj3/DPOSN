@@ -1,3 +1,6 @@
+import { fetchJSONFromIPFS } from './PinataUtils'
+const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
+
 /**
  * get user data from a user address
  * @param {*} userAddress

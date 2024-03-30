@@ -5,6 +5,7 @@ import NewPost from './NewPost'
 import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
 import { fetchJSONFromIPFS } from '../../utils/PinataUtils'
+import { func } from 'prop-types'
 
 // const posts = {
 //   _id: '1',
@@ -16,6 +17,7 @@ import { fetchJSONFromIPFS } from '../../utils/PinataUtils'
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
 function MainSection() {
+  const [allposts, setAllPosts] = useState([])
   const [posts, setPosts] = useState([])
 
   const {
@@ -58,7 +60,11 @@ function MainSection() {
         const fetchedContent = await fetchJSONFromIPFS(allPostData[i].postCID)
         const fetchedUserData = await fetchUserData(allPostData[i].userAddress)
         if (fetchedContent != null) {
-          postContent.push({ ...fetchedContent, ...fetchedUserData })
+          postContent.push({
+            ...fetchedContent,
+            ...fetchedUserData,
+            userAddress: allPostData[i].userAddress,
+          })
         }
       }
 
@@ -110,6 +116,7 @@ function MainSection() {
         }
 
         tempPosts.push({
+          userAddress: postContent[i].userAddress,
           _id: allPostData[i].postCID,
           profileUrl: postContent[i].imageCID
             ? `${PINATA_GATEWAY}/ipfs/${postContent[i].imageCID}`
@@ -131,7 +138,7 @@ function MainSection() {
 
       tempPosts.reverse()
 
-      setPosts(tempPosts)
+      setAllPosts(tempPosts)
     }
   }
 
@@ -143,9 +150,70 @@ function MainSection() {
     }
   }, [contract])
 
+  const [postType, setPostType] = useState('Global')
+
+  function handleGlobal() {
+    setPostType('Global')
+    setPosts(allposts)
+  }
+
+  function handleYourPosts() {
+    let tempPost = []
+    for (let i = 0; i < allposts.length; i++) {
+      if (allposts[i].userAddress.toLowerCase() === accounts[0].toLowerCase()) {
+        tempPost.push(allposts[i])
+      }
+    }
+
+    setPostType('Your Posts')
+    setPosts(tempPost)
+  }
+
+  async function handleFollowing() {
+    const currentUserFollowing = await contract.methods
+      .getFollowedUsers()
+      .call({ from: accounts[0] })
+
+    let tempPost = []
+    for (let i = 0; i < allposts.length; i++) {
+      for (let j = 0; j < currentUserFollowing.length; j++) {
+        if (
+          allposts[i].userAddress.toLowerCase() ===
+          currentUserFollowing[j].toLowerCase()
+        ) {
+          tempPost.push(allposts[i])
+        }
+      }
+    }
+    setPostType('Following')
+    setPosts(tempPost)
+  }
+
   return (
     <div>
       <NewPost />
+
+      <div className="grid grid-flow-col justify-stretch mb-2 bg-primary h-10 rounded-xl shadow-xl">
+        <div
+          onClick={handleGlobal}
+          className={`flex justify-center items-center rounded-l-xl  ${postType === 'Global' ? 'bg-slate-400' : ''}`}
+        >
+          Global
+        </div>
+        <div
+          onClick={handleYourPosts}
+          className={`flex justify-center items-center ${postType === 'Your Posts' ? 'bg-slate-400' : ''}`}
+        >
+          Your Posts
+        </div>
+        <div
+          onClick={handleFollowing}
+          className={`flex justify-center items-center rounded-r-xl ${postType === 'Following' ? 'bg-slate-400' : ''}`}
+        >
+          Following
+        </div>
+      </div>
+
       {posts?.map((post) => (
         <PostCard
           key={post?._id}

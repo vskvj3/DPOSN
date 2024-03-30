@@ -33,6 +33,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/profilecreation" element={<ProfileCreation />} />
+        <Route element={<Pages />} />
       </Routes>
     </>
   )

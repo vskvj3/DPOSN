@@ -6,8 +6,17 @@ import { Link } from 'react-router-dom'
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
+import {
+  pinFileToIPFS,
+  pinJSONToIPFS,
+  fetchJSONFromIPFS,
+} from '../../utils/PinataUtils'
+
 function RightSideBar() {
   const [followedUsers, setFollowedUsers] = useState([])
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [chatHistory, setChatHistory] = useState([])
+  const [newMessage, setNewMessage] = useState('')
   const {
     state: { contract, accounts },
   } = useContext(EthContext)
@@ -55,6 +64,52 @@ function RightSideBar() {
     return data
   }
 
+  const sendMessage = async () => {
+    if (!newMessage || !selectedUser) return
+    try {
+      chatHistory.push({ sender: accounts[0], newMessage })
+
+      const chatCID = await pinJSONToIPFS(chatHistory)
+
+      await contract.methods
+        .sendMessage(accounts[0], selectedUser._id, chatCID)
+        .send({ from: accounts[0] })
+      setNewMessage('')
+      loadChatHistory()
+    } catch (error) {
+      console.error('Error sending message:', error)
+    }
+  }
+
+  const loadChatHistory = async () => {
+    if (!selectedUser) return
+    try {
+      const chatCID = await contract.methods
+        .getMessage(accounts[0], selectedUser._id)
+        .call({ from: accounts[0] })
+
+      if (chatCID) {
+        const chat = await fetchJSONFromIPFS(chatCID)
+
+        console.log(chat)
+
+        if (Array.isArray(chat)) {
+          setChatHistory(chat)
+        } else {
+          setChatHistory([])
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching chat history:', error)
+      setChatHistory([])
+    }
+  }
+
+  function handleUserClick(user) {
+    setSelectedUser(user)
+    loadChatHistory()
+  }
+
   return (
     <div>
       <div className="w-full bg-white shadow-xl rounded-lg px-6 py-5">
@@ -62,27 +117,76 @@ function RightSideBar() {
           <span> Circle </span>
           <span>{followedUsers.length}</span>
         </div>
-
-        <div className="w-full flex flex-col gap-4 pt-4">
+        <div
+          className="w-full flex flex-col gap-4 pt-4"
+          // style={{
+          //   maxHeight: '240px', // Adjust as needed
+          //   overflowY: 'scroll',
+          //   scrollbarWidth: 'none', // Firefox
+          //   msOverflowStyle: 'none', // IE and Edge
+          // }}
+        >
           {followedUsers.map((user) => (
-            <Link key={user?._id} to={'/profile?user=' + user?._id}>
-              <div className="flex items-center justify-between">
-                <img
-                  src={user?.profileUrl ? user?.profileUrl : NoProfile}
-                  alt={user?.userName}
-                  className="w-10 h-10 object-cover rounded-full"
-                />
-                <div className="flex-1 ml-4">
-                  <p className="text-base font-medium text-ascent-1">
-                    {user?.userName ? user?.userName : 'User Name'}
-                  </p>
-                  <span className="text-sm text-ascent-2">
-                    {user?.status ? user?.status : ''}
-                  </span>
-                </div>
+            <div
+              key={user?._id}
+              className="flex items-center justify-between"
+              onClick={() => handleUserClick(user)}
+            >
+              <img
+                src={user?.profileUrl ? user?.profileUrl : NoProfile}
+                alt={user?.userName}
+                className="w-10 h-10 object-cover rounded-full"
+              />
+              <div className="flex-1 ml-4">
+                <p className="text-base font-medium text-ascent-1">
+                  {user?.userName ? user?.userName : 'User Name'}
+                </p>
+                <span className="text-sm text-ascent-2">
+                  {user?.status ? user?.status : ''}
+                </span>
               </div>
-            </Link>
+            </div>
           ))}
+        </div>
+      </div>
+      <div
+        className="w-full bg-white shadow-xl rounded-lg px-6 py-5 mt-4"
+        style={{ height: '300px' }}
+      >
+        <div className="flex items-center justify-between text-xl pb-2 border-b border-[#66666645]">
+          <span> Chat with {selectedUser?.userName}</span>
+        </div>
+        <div
+          className="px-4 py-2 overflow-y-auto"
+          style={{ maxHeight: '240px' }} // Adjusted max height to accommodate the send button
+        >
+          {chatHistory.map((message, index) => (
+            <div key={index} className="mb-2">
+              <span
+                className={
+                  message.sender === accounts[0] ? 'text-right block' : 'block'
+                }
+              >
+                {message.newMessage}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="border-t border-[#66666645] mt-2">
+          <div className="flex items-center justify-between px-4 py-2">
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              className="flex-1 px-4 py-2 outline-none"
+            />
+            <button
+              onClick={sendMessage}
+              className="px-4 py-2 bg-blue-500 text-black hover:bg-blue-600 ml-2"
+            >
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>

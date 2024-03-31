@@ -169,16 +169,16 @@ function RightSideBar() {
           ))}
         </div>
         <div className="border-t border-[#66666645] mt-2">
-          <div className="flex mt-3">
+          <div className="flex mt-3 justify-between">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              className="px-4 py-2 bg-slate-200 rounded-sm"
+              className="px-4 py-2 bg-slate-200 rounded-md"
             />
             <button
               onClick={sendMessage}
-              className="px-4 py-2 bg-blue text-white rounded-md ml-2"
+              className="px-4 py-2 bg-blue text-white rounded-md"
             >
               Send
             </button>

@@ -35,6 +35,7 @@ function UserProvider({ children }) {
           lastName: Web3.utils.hexToAscii(data.lastName).replace(/\0.*$/g, ''),
           imageCID: data.imageCID,
           status: Web3.utils.hexToAscii(data.status).replace(/\0.*$/g, ''),
+          createdAt: data.createdAt,
           address: accounts[0],
           followers: data.followers,
           following: data.following,

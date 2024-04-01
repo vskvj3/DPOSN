@@ -65,12 +65,16 @@ function RightSideBar() {
   }
 
   const sendMessage = async () => {
+    console.log('on send message')
+    console.log('new message:', newMessage)
+    console.log('selected user:', selectedUser)
     if (!newMessage || !selectedUser) return
     try {
       chatHistory.push({ sender: accounts[0], newMessage })
 
       const chatCID = await pinJSONToIPFS(chatHistory)
-
+      console.log(selectedUser._id, chatCID)
+      console.log(accounts[0])
       await contract.methods
         .sendMessage(accounts[0], selectedUser._id, chatCID)
         .send({ from: accounts[0] })
@@ -82,12 +86,15 @@ function RightSideBar() {
   }
 
   const loadChatHistory = async () => {
+    console.log('on load chat history')
+    console.log('selected user:', selectedUser)
     if (!selectedUser) return
     try {
+      console.log('selected user:', selectedUser)
       const chatCID = await contract.methods
         .getMessage(accounts[0], selectedUser._id)
         .call({ from: accounts[0] })
-
+      console.log('chatid: ', chatCID)
       if (chatCID) {
         const chat = await fetchJSONFromIPFS(chatCID)
 
@@ -105,10 +112,15 @@ function RightSideBar() {
     }
   }
 
-  function handleUserClick(user) {
+  async function handleUserClick(user) {
     setSelectedUser(user)
-    loadChatHistory()
   }
+
+  useEffect(() => {
+    if (selectedUser) {
+      loadChatHistory()
+    }
+  }, [selectedUser])
 
   return (
     <div>

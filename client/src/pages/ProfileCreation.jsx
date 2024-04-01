@@ -102,6 +102,7 @@ function ProfileCreation() {
     Cookies.set('user', accounts[0])
     Cookies.set('loggedIn', true)
     navigate('/')
+    window.location.reload()
   }
 
   function handleChange(e) {

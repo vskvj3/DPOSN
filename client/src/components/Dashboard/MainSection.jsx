@@ -6,6 +6,7 @@ import EthContext from '../../contexts/EthContext'
 import Web3 from 'web3'
 import { fetchJSONFromIPFS } from '../../utils/PinataUtils'
 import { func } from 'prop-types'
+import { LineWave } from 'react-loader-spinner'
 
 // const posts = {
 //   _id: '1',
@@ -20,6 +21,7 @@ function MainSection() {
   const [allposts, setAllPosts] = useState([])
   const [posts, setPosts] = useState([])
   const [postType, setPostType] = useState('Global')
+  const [loading, setLoading] = useState(false)
 
   const {
     state: { contract, accounts },
@@ -43,15 +45,8 @@ function MainSection() {
     return allPostData
   }
 
-  // async function fetchContentFromIPFS(postCID) {
-  //   const content = await fetch(`${PINATA_GATEWAY}/ipfs/${postCID}`, {
-  //     method: 'GET',
-  //     headers: { accept: 'text/plain' },
-  //   })
-  //   return await content.json()
-  // }
-
   async function fetchPosts() {
+    setLoading(true)
     console.log('fetching posts')
     const allPostData = await fetchAllPosts()
 
@@ -139,7 +134,7 @@ function MainSection() {
       }
 
       tempPosts.reverse()
-
+      setLoading(false)
       setAllPosts(tempPosts)
       setPosts(tempPosts)
     }
@@ -212,16 +207,36 @@ function MainSection() {
           Following
         </div>
       </div>
-
-      {posts?.map((post) => (
-        <PostCard
-          key={post?._id}
-          post={post}
-          comments={post.comment}
-          likes={post.likes}
-          reports={post.reports}
-        />
-      ))}
+      {loading ? (
+        <div className="flex justify-center items-center h-96">
+          <LineWave
+            visible={true}
+            height="100"
+            width="100"
+            color="rgb(219 39 119"
+            ariaLabel="line-wave-loading"
+          />
+        </div>
+      ) : (
+        <div>
+          {posts.length > 0 ? (
+            ''
+          ) : (
+            <div className="flex justify-center items-center h-96">
+              No Posts Found
+            </div>
+          )}
+          {posts?.map((post) => (
+            <PostCard
+              key={post?._id}
+              post={post}
+              comments={post.comment}
+              likes={post.likes}
+              reports={post.reports}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

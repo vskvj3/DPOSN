@@ -17,6 +17,7 @@ function RightSideBar() {
   const [selectedUser, setSelectedUser] = useState(null)
   const [chatHistory, setChatHistory] = useState([])
   const [newMessage, setNewMessage] = useState('')
+  const [sendingMessage, setSendingMessage] = useState(false)
   const {
     state: { contract, accounts },
   } = useContext(EthContext)
@@ -69,7 +70,9 @@ function RightSideBar() {
     console.log('new message:', newMessage)
     console.log('selected user:', selectedUser)
     if (!newMessage || !selectedUser) return
+
     try {
+      setSendingMessage(true)
       chatHistory.push({ sender: accounts[0], newMessage })
 
       const chatCID = await pinJSONToIPFS(chatHistory)
@@ -80,8 +83,10 @@ function RightSideBar() {
         .send({ from: accounts[0] })
       setNewMessage('')
       loadChatHistory()
+      setSendingMessage(false)
     } catch (error) {
       console.error('Error sending message:', error)
+      setSendingMessage(false)
     }
   }
 
@@ -192,7 +197,7 @@ function RightSideBar() {
               onClick={sendMessage}
               className="px-4 py-2 bg-blue text-white rounded-md"
             >
-              Send
+              {sendingMessage ? 'Sending' : 'Send'}
             </button>
           </div>
         </div>

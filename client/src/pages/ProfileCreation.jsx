@@ -8,6 +8,7 @@ import Cookies from 'js-cookie'
 import Web3 from 'web3'
 import { BiCamera } from 'react-icons/bi'
 import { pinFileToIPFS } from '../utils/PinataUtils'
+import { ProgressBar } from 'react-loader-spinner'
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
@@ -43,6 +44,7 @@ for (let i = date.getFullYear(); i >= 1905; i--) {
 
 function ProfileCreation() {
   const location = useLocation()
+  const [loading, setLoading] = useState(false)
 
   const {
     state: { contract, accounts },
@@ -84,6 +86,7 @@ function ProfileCreation() {
 
   async function handleSubmit(e) {
     e.preventDefault()
+    setLoading(true)
     let imageCID = ''
 
     if (!newUser) {
@@ -101,6 +104,7 @@ function ProfileCreation() {
     }
     Cookies.set('user', accounts[0])
     Cookies.set('loggedIn', true)
+    setLoading(false)
     navigate('/')
     window.location.reload()
   }
@@ -192,7 +196,7 @@ function ProfileCreation() {
                 </div>
               </span>
             </label>
-            <form className="flex flex-col w-80 h-80 mt-8 ">
+            <form className="flex flex-col w-80 h-50 mt-8 ">
               <input
                 className="h-10 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
                 placeholder="First Name"
@@ -257,6 +261,13 @@ function ProfileCreation() {
                 {newUser ? 'Create Profile' : 'Update Profile'}
               </button>
             </form>
+            <ProgressBar
+              visible={loading ? true : false}
+              height="80"
+              width="80"
+              barColor="rgb(219 39 119"
+              ariaLabel="progress-bar-loading"
+            />
           </div>
         </div>
       </div>

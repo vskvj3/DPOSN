@@ -19,6 +19,7 @@ const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 function MainSection() {
   const [allposts, setAllPosts] = useState([])
   const [posts, setPosts] = useState([])
+  const [postType, setPostType] = useState('Global')
 
   const {
     state: { contract, accounts },
@@ -51,6 +52,7 @@ function MainSection() {
   // }
 
   async function fetchPosts() {
+    console.log('fetching posts')
     const allPostData = await fetchAllPosts()
 
     const postContent = []
@@ -139,18 +141,15 @@ function MainSection() {
       tempPosts.reverse()
 
       setAllPosts(tempPosts)
+      setPosts(tempPosts)
     }
   }
-
-  const [comment, setComment] = useState()
 
   useEffect(() => {
     if (contract != null) {
       fetchPosts()
     }
   }, [contract])
-
-  const [postType, setPostType] = useState('Global')
 
   function handleGlobal() {
     setPostType('Global')

@@ -99,13 +99,14 @@ function UserListCard() {
 
       <div className="w-full flex flex-col gap-4 pt-4">
         {users?.map((user) => (
-          <Link key={user?._id} to={'/profile?user=' + user?._id}>
-            <div className="flex items-center justify-between">
-              <img
-                src={user?.profileUrl ? user?.profileUrl : NoProfile}
-                alt={user?.userName}
-                className="w-10 h-10 object-cover rounded-full"
-              />
+          <div key={user?._id} className="flex items-center justify-between">
+            <img
+              src={user?.profileUrl ? user?.profileUrl : NoProfile}
+              alt={user?.userName}
+              className="w-10 h-10 object-cover rounded-full"
+            />
+
+            <Link to={'/profile?user=' + user?._id}>
               <div className="flex-1 ml-4 mt-2">
                 <p className="text-base font-medium text-ascent-1">
                   {user?.userName ? user?.userName : 'User Name'}
@@ -114,14 +115,14 @@ function UserListCard() {
                   {user?.status ? user?.status : ''}
                 </span>
               </div>
-              <button
-                onClick={() => followUser(user._id)}
-                className="hover:bg-primary-600 bg-[#0444a4] text-white font-semibold py-1 px-2 rounded-md"
-              >
-                Follow
-              </button>
-            </div>
-          </Link>
+            </Link>
+            <button
+              onClick={() => followUser(user._id)}
+              className="hover:bg-primary-600 bg-[#0444a4] text-white font-semibold py-1 px-2 rounded-md"
+            >
+              Follow
+            </button>
+          </div>
         ))}
       </div>
     </div>

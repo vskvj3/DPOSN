@@ -1,13 +1,15 @@
 import { useState, React, useContext } from 'react'
 import Navbar from '../components/Navbar/Navbar'
-
 import { useLocation, useNavigate } from 'react-router-dom'
 import EthContext from '../contexts/EthContext'
+import UserContext from '../contexts/UserContext'
 import NoProfile from '../assets/images/userprofile.png'
 import Cookies from 'js-cookie'
 import Web3 from 'web3'
 import { BiCamera } from 'react-icons/bi'
 import { pinFileToIPFS } from '../utils/PinataUtils'
+
+const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
 const date = new Date()
 
@@ -28,6 +30,8 @@ const months = [
 
 const days = []
 const years = []
+let userName = ''
+let newUser = true
 
 for (let i = 1; i <= 31; i++) {
   days.push(i)
@@ -43,29 +47,58 @@ function ProfileCreation() {
   const {
     state: { contract, accounts },
   } = useContext(EthContext)
+  const user = useContext(UserContext)
 
   const navigate = useNavigate()
 
-  const { userName } = location.state
+  try {
+    userName = location.state.userName
+  } catch (e) {
+    console.log(e)
+  }
 
+  if (!userName) {
+    newUser = false
+  }
   const [file, setFile] = useState(null)
 
-  const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    day: date.getDate(),
-    month: months[date.getMonth()],
-    year: date.getFullYear(),
-    status: '',
-  })
+  const [form, setForm] = useState(
+    newUser
+      ? {
+          firstName: '',
+          lastName: '',
+          day: date.getDate(),
+          month: months[date.getMonth()],
+          year: date.getFullYear(),
+          status: '',
+        }
+      : {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          day: date.getDate(),
+          month: months[date.getMonth()],
+          year: date.getFullYear(),
+          status: user.status,
+        }
+  )
 
   async function handleSubmit(e) {
     e.preventDefault()
     let imageCID = ''
+
+    if (!newUser) {
+      userName = user.userName
+      imageCID = user.imageCID
+    }
     if (file) {
       imageCID = await pinFileToIPFS(file)
     }
-    await registerUser(imageCID, userName, form)
+
+    if (newUser) {
+      await registerUser(imageCID, userName, form)
+    } else {
+      await updateUser(imageCID, userName, form)
+    }
     Cookies.set('user', accounts[0])
     Cookies.set('loggedIn', true)
     navigate('/')
@@ -78,28 +111,27 @@ function ProfileCreation() {
     })
   }
 
-  // useEffect(() => {
-  //   async function loadContract() {
-  //     const web3 = new Web3(window.ethereum)
-  //   }
-  //   loadContract()
-  // }, [])
-
   async function registerUser(imageCID, userName, form) {
     let dateOfBirth = `${form.day}/${form.month}/${form.year}`
 
-    // console.log(
-    //   account,
-    //   email,
-    //   password,
-    //   form.firstName,
-    //   form.lastName,
-    //   dateOfBirth,
-    //   form.gender
-    // )
-
     await contract.methods
       .registerUser(
+        accounts[0],
+        imageCID,
+        Web3.utils.padRight(Web3.utils.asciiToHex(userName), 64),
+        Web3.utils.padRight(Web3.utils.asciiToHex(form.firstName), 64),
+        Web3.utils.padRight(Web3.utils.asciiToHex(form.lastName), 64),
+        Web3.utils.padRight(Web3.utils.asciiToHex(dateOfBirth), 64),
+        Web3.utils.padRight(Web3.utils.asciiToHex(form.status), 64)
+      )
+      .send({ from: accounts[0] })
+  }
+
+  async function updateUser(imageCID, userName, form) {
+    let dateOfBirth = `${form.day}/${form.month}/${form.year}`
+
+    await contract.methods
+      .updateUser(
         accounts[0],
         imageCID,
         Web3.utils.padRight(Web3.utils.asciiToHex(userName), 64),
@@ -139,7 +171,15 @@ function ProfileCreation() {
                   <div className="overflow-hidden h-full w-full rounded-full border-2">
                     <img
                       className="h-full w-full object-cover object-center"
-                      src={file ? URL.createObjectURL(file) : NoProfile}
+                      src={
+                        file
+                          ? URL.createObjectURL(file)
+                          : newUser
+                            ? NoProfile
+                            : user.imageCID
+                              ? `${PINATA_GATEWAY}/ipfs/${user.imageCID}`
+                              : NoProfile
+                      }
                     ></img>
                   </div>
 
@@ -211,7 +251,7 @@ function ProfileCreation() {
                 className="h-10 bg-pink-600 mt-5 rounded-lg text-white"
                 onClick={handleSubmit}
               >
-                Create Profile
+                {newUser ? 'Create Profile' : 'Update Profile'}
               </button>
             </form>
           </div>

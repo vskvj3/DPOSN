@@ -149,16 +149,12 @@ function RightSideBar() {
           ))}
         </div>
       </div>
-      <div
-        className="w-full bg-white shadow-xl rounded-lg px-6 py-5 mt-4"
-        style={{ height: '300px' }}
-      >
-        <div className="flex items-center justify-between text-xl pb-2 border-b border-[#66666645]">
+      <div className="w-full bg-white shadow-xl rounded-lg px-6 py-5 mt-4 h-full">
+        <div className="text-xl pb-2 border-b border-[#66666645]">
           <span> Chat with {selectedUser?.userName}</span>
         </div>
         <div
-          className="px-4 py-2 overflow-y-auto"
-          style={{ maxHeight: '240px' }} // Adjusted max height to accommodate the send button
+          className="px-4 py-2 overflow-y-auto bg-slate-100 rounded-md max-h-[240px] mt-2" // Adjusted max height to accommodate the send button
         >
           {chatHistory.map((message, index) => (
             <div key={index} className="mb-2">
@@ -173,16 +169,16 @@ function RightSideBar() {
           ))}
         </div>
         <div className="border-t border-[#66666645] mt-2">
-          <div className="flex items-center justify-between px-4 py-2">
+          <div className="flex mt-3 justify-between">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              className="flex-1 px-4 py-2 outline-none"
+              className="px-4 py-2 bg-slate-200 rounded-md"
             />
             <button
               onClick={sendMessage}
-              className="px-4 py-2 bg-blue-500 text-black hover:bg-blue-600 ml-2"
+              className="px-4 py-2 bg-blue text-white rounded-md"
             >
               Send
             </button>

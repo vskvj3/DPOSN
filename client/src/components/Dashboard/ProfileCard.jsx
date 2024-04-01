@@ -15,7 +15,7 @@ function ProfileCard() {
     /* Rainbow border */
     <div className="w-full rounded-xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
       {/* Actual Component */}
-      <Link to={'/profile?user=' + user.address}>
+      <Link to="/profilecreation">
         <div
           className="w-full bg-primary flex flex-col items-center rounded-xl px-6 py-4"
           onClick={() => console.log('cliec')}

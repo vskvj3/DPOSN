@@ -151,10 +151,7 @@ contract SocialNetwork {
     }
 
     // like section
-    function addLikes(
-        string memory _postCID,
-        string memory _likesCID
-    ) public {
+    function addLikes(string memory _postCID, string memory _likesCID) public {
         require(
             accounts[msg.sender].userAddress == msg.sender,
             "User doesn't exist"
@@ -169,10 +166,7 @@ contract SocialNetwork {
             accounts[msg.sender].userAddress == msg.sender,
             "User doesn't exist"
         );
-        require(
-            abi.encodePacked(allLikes[_postCID]).length > 0,
-            "No Likes"
-        );
+        require(abi.encodePacked(allLikes[_postCID]).length > 0, "No Likes");
         return allLikes[_postCID];
     }
 
@@ -198,7 +192,6 @@ contract SocialNetwork {
         return allReports[_postCID];
     }
 
-    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //  Follow user functions                                                                                           //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -251,5 +244,37 @@ contract SocialNetwork {
 
     function getFollowersCount(address userAddress) public view returns (uint) {
         return accounts[userAddress].followersCount;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  Follow user functions                                                                                           //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    mapping(address => mapping(address => string)) allchats;
+
+    function sendMessage(
+        address sender,
+        address receiver,
+        string memory chatCID
+    ) public {
+        require(
+            accounts[receiver].userAddress == receiver,
+            "User doesn't exist"
+        );
+
+        allchats[sender][receiver] = chatCID;
+        allchats[receiver][sender] = chatCID;
+    }
+
+    function getMessage(
+        address sender,
+        address receiver
+    ) public view returns (string memory) {
+        require(
+            accounts[msg.sender].userAddress == msg.sender,
+            "User doesn't exist"
+        );
+
+        return allchats[sender][receiver];
     }
 }

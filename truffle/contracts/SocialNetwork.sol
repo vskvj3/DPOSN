@@ -14,6 +14,7 @@ contract SocialNetwork {
         bytes32 lastName;
         bytes32 dateOfBirth;
         bytes32 status;
+        string createdAt;
         address[] followers;
         address[] following;
         uint followersCount;
@@ -31,7 +32,8 @@ contract SocialNetwork {
         bytes32 _firstName,
         bytes32 _lastName,
         bytes32 _dateOfBirth,
-        bytes32 _status
+        bytes32 _status,
+        string memory _createdAt
     ) public {
         require(
             accounts[_userAddress].userAddress != msg.sender,
@@ -46,6 +48,7 @@ contract SocialNetwork {
             lastName: _lastName,
             dateOfBirth: _dateOfBirth,
             status: _status,
+            createdAt: _createdAt,
             followers: new address[](0),
             following: new address[](0),
             followersCount: 0,
@@ -74,6 +77,7 @@ contract SocialNetwork {
             lastName: _lastName,
             dateOfBirth: _dateOfBirth,
             status: _status,
+            createdAt: accounts[msg.sender].createdAt,
             followers: accounts[msg.sender].followers,
             following: accounts[msg.sender].following,
             followersCount: accounts[msg.sender].followersCount,

@@ -113,6 +113,7 @@ function ProfileCreation() {
 
   async function registerUser(imageCID, userName, form) {
     let dateOfBirth = `${form.day}/${form.month}/${form.year}`
+    let createdAt = new Date().toISOString()
 
     await contract.methods
       .registerUser(
@@ -122,7 +123,8 @@ function ProfileCreation() {
         Web3.utils.padRight(Web3.utils.asciiToHex(form.firstName), 64),
         Web3.utils.padRight(Web3.utils.asciiToHex(form.lastName), 64),
         Web3.utils.padRight(Web3.utils.asciiToHex(dateOfBirth), 64),
-        Web3.utils.padRight(Web3.utils.asciiToHex(form.status), 64)
+        Web3.utils.padRight(Web3.utils.asciiToHex(form.status), 64),
+        createdAt
       )
       .send({ from: accounts[0] })
   }

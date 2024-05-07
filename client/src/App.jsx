@@ -34,7 +34,6 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/profilecreation" element={<ProfileCreation />} />
-        <Route path="/rightsidebar" element={<RightSideBar />} />
         <Route element={<Pages />} />
       </Routes>
     </>

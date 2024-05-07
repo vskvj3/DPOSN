@@ -6,7 +6,6 @@ import ProfileCard from '../components/Dashboard/ProfileCard'
 import RightSideBar from '../components/Dashboard/RightSideBar'
 import MainSection from '../components/Dashboard/MainSection'
 import { BottomNavigation, BottomNavigationAction } from '@mui/material'
-import { BiImages } from 'react-icons/bi'
 import { IoHomeSharp } from "react-icons/io5"
 import { IoMdChatbubbles } from "react-icons/io"
 import { HiUsers } from "react-icons/hi";

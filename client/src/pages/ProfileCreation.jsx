@@ -155,7 +155,7 @@ function ProfileCreation() {
       <div className="w-screen h-screen bg-gradient-to-r to-red-300 from-slate-300 overflow-hidden">
         <Navbar />
         <div className="grid place-content-center h-full">
-          <div className="bg-white w-[20rem] h-[30rem]  sm:w-[30rem] sm:h-[36rem]  flex flex-col items-center  place-content-center rounded-lg shadow-xl">
+          <div className="bg-white px-5 w-full lg:w-[30rem] h-[30rem] sm:h-[36rem]  flex flex-col items-center  place-content-center rounded-lg shadow-xl">
             <h1 className="mt-4 text-xl">Profile Details</h1>
             <label
               htmlFor="imgUpload"

@@ -7,6 +7,7 @@ import ProfileCreation from './pages/ProfileCreation'
 import Pages from './pages/Pages'
 import ProfilePage from './pages/Profile'
 import Cookies from 'js-cookie'
+import RightSideBar from './components/Dashboard/RightSideBar'
 
 function App() {
   useEffect(() => {
@@ -33,6 +34,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/profilecreation" element={<ProfileCreation />} />
+        <Route path="/rightsidebar" element={<RightSideBar />} />
         <Route element={<Pages />} />
       </Routes>
     </>

@@ -166,6 +166,8 @@ function RightSideBar() {
           ))}
         </div>
       </div>
+
+      {/* chat section */}
       <div className="w-full bg-white shadow-xl rounded-lg px-6 py-5 mt-4 h-full">
         <div className="text-xl pb-2 border-b border-[#66666645]">
           <span> Chat with {selectedUser?.userName}</span>
@@ -191,11 +193,11 @@ function RightSideBar() {
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              className="px-4 py-2 bg-slate-200 rounded-md"
+              className="py-2 w-3/4 bg-slate-200 rounded-md"
             />
             <button
               onClick={sendMessage}
-              className="px-4 py-2 bg-blue text-white rounded-md"
+              className="px-4 ml-3 bg-blue text-white rounded-md"
             >
               {sendingMessage ? 'Sending' : 'Send'}
             </button>

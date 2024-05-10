@@ -20,9 +20,12 @@ const reducer = (state, action) => {
   const { type, data } = action
   switch (type) {
     case actions.init:
-      return { ...state, ...data };
+      return { ...state, ...data }
     case 'UPDATE_CURRENT_USER_FOLLOWING':
-      return { ...state, currentUserFollowing: data }
+      return {
+        ...state,
+        currentUserFollowing: data,
+      }
     default:
       throw new Error('Undefined reducer action type')
   }

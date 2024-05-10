@@ -45,6 +45,7 @@ for (let i = date.getFullYear(); i >= 1905; i--) {
 function ProfileCreation() {
   const location = useLocation()
   const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(false)
 
   const {
     state: { contract, accounts },
@@ -86,27 +87,34 @@ function ProfileCreation() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setLoading(true)
-    let imageCID = ''
+    if (form.firstName != '' && form.lastName != '') {
+      if (errorMessage === true) {
+        setErrorMessage(false)
+      }
+      setLoading(true)
+      let imageCID = ''
 
-    if (!newUser) {
-      userName = user.userName
-      imageCID = user.imageCID
-    }
-    if (file) {
-      imageCID = await pinFileToIPFS(file)
-    }
+      if (!newUser) {
+        userName = user.userName
+        imageCID = user.imageCID
+      }
+      if (file) {
+        imageCID = await pinFileToIPFS(file)
+      }
 
-    if (newUser) {
-      await registerUser(imageCID, userName, form)
+      if (newUser) {
+        await registerUser(imageCID, userName, form)
+      } else {
+        await updateUser(imageCID, userName, form)
+      }
+      Cookies.set('user', accounts[0])
+      Cookies.set('loggedIn', true)
+      setLoading(false)
+      navigate('/')
+      window.location.reload()
     } else {
-      await updateUser(imageCID, userName, form)
+      setErrorMessage(true)
     }
-    Cookies.set('user', accounts[0])
-    Cookies.set('loggedIn', true)
-    setLoading(false)
-    navigate('/')
-    window.location.reload()
   }
 
   function handleChange(e) {
@@ -114,6 +122,10 @@ function ProfileCreation() {
       ...form,
       [e.target.name]: e.target.value,
     })
+
+    if (form.firstName != '' && form.lastName != '' && form.status != '') {
+      setErrorMessage(false)
+    }
   }
 
   async function registerUser(imageCID, userName, form) {
@@ -197,6 +209,9 @@ function ProfileCreation() {
               </span>
             </label>
             <form className="flex flex-col w-80 h-50 mt-8 ">
+              {errorMessage && form.firstName === '' && (
+                <p className="text-sm text-red-500 ">First Name Required</p>
+              )}
               <input
                 className="h-10 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
                 placeholder="First Name"
@@ -205,6 +220,9 @@ function ProfileCreation() {
                 name="firstName"
                 onChange={handleChange}
               ></input>
+              {errorMessage && form.lastName === '' && (
+                <p className="text-sm text-red-500 ">Last Name Required</p>
+              )}
               <input
                 className="h-10 mt-4 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
                 placeholder="Last Name"
@@ -213,6 +231,9 @@ function ProfileCreation() {
                 name="lastName"
                 onChange={handleChange}
               ></input>
+              {errorMessage && form.status === '' && (
+                <p className="text-sm text-red-500 ">Status Required</p>
+              )}
               <input
                 className="h-10 mt-4 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
                 placeholder="Status"

@@ -21,11 +21,17 @@ function MainSection() {
   const [allposts, setAllPosts] = useState([])
   const [posts, setPosts] = useState([])
   const [postType, setPostType] = useState('Global')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [reload, setReload] = useState(false)
 
   const {
     state: { contract, accounts },
   } = useContext(EthContext)
+
+  function handlePostSectionReload() {
+    setLoading(true)
+    setReload(!reload)
+  }
 
   async function fetchUserData(userAddress) {
     const data = await contract.methods
@@ -46,7 +52,6 @@ function MainSection() {
   }
 
   async function fetchPosts() {
-    setLoading(true)
     console.log('fetching posts')
     const allPostData = await fetchAllPosts()
 
@@ -138,13 +143,16 @@ function MainSection() {
       setAllPosts(tempPosts)
       setPosts(tempPosts)
     }
+    {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
     if (contract != null) {
       fetchPosts()
     }
-  }, [contract])
+  }, [contract, reload])
 
   function handleGlobal() {
     setPostType('Global')
@@ -185,7 +193,7 @@ function MainSection() {
 
   return (
     <div>
-      <NewPost />
+      <NewPost handlePostSectionReload={handlePostSectionReload} />
       {/* Choose Feed Section */}
       <div className="grid grid-flow-col justify-stretch mb-2 bg-primary h-10 rounded-xl shadow-xl">
         <div

@@ -6,12 +6,17 @@ import ProfileCard from '../components/Dashboard/ProfileCard'
 import RightSideBar from '../components/Dashboard/RightSideBar'
 import MainSection from '../components/Dashboard/MainSection'
 import { BottomNavigation, BottomNavigationAction } from '@mui/material'
-import { IoHomeSharp } from "react-icons/io5"
-import { IoMdChatbubbles } from "react-icons/io"
-import { HiUsers } from "react-icons/hi";
-import { MdAccountCircle } from "react-icons/md";
+import { IoHomeSharp } from 'react-icons/io5'
+import { IoMdChatbubbles } from 'react-icons/io'
+import { HiUsers } from 'react-icons/hi'
+import { MdAccountCircle } from 'react-icons/md'
 
 function Dashboard() {
+  const [userListAndFollowListReload, setUserListAndFollowListReload] =
+    useState(true)
+  function handleUserListAndFollowListReload() {
+    setUserListAndFollowListReload(!userListAndFollowListReload)
+  }
   const [value, setValue] = useState(0)
   const [screenWidth, setScreenWidth] = useState(window.innerWidth)
   console.log('screen width: ', screenWidth)
@@ -23,7 +28,11 @@ function Dashboard() {
         <div className="hidden md:flex w-full gap-2 lg:gap-4 pt-5 pb-10 h-full">
           {/* LEFT */}
           <div className="hidden w-1/3 lg:w-1/4 h-full md:flex flex-col gap-6 overflow-y-auto">
-            <LeftSideBar />
+            <LeftSideBar
+              handleUserListAndFollowListReload={
+                handleUserListAndFollowListReload
+              }
+            />
           </div>
 
           {/* CENTER */}
@@ -33,7 +42,9 @@ function Dashboard() {
 
           {/* RIGHT */}
           <div className="hidden w-1/3 lg:w-1/4 h-full lg:flex flex-col gap-8 overflow-y-auto">
-            <RightSideBar />
+            <RightSideBar
+              userListAndFollowListReload={userListAndFollowListReload}
+            />
           </div>
         </div>
         {/* Mobile view */}
@@ -47,14 +58,20 @@ function Dashboard() {
         {value === 1 && (
           <div className="flex md:hidden w-full gap-2 pt-5 pb-2 h-full">
             <div className="flex-1 h-full px-4 overflow-y-scroll rounded-lg no-scrollbar">
-              <RightSideBar />
+              <RightSideBar
+                userListAndFollowListReload={userListAndFollowListReload}
+              />
             </div>
           </div>
         )}
         {value === 2 && (
           <div className="flex md:hidden w-full gap-2 pt-5 pb-2 h-full">
             <div className="flex-1 h-full px-4 overflow-y-scroll rounded-lg no-scrollbar">
-              <UserListCard />
+              <UserListCard
+                handleUserListAndFollowListReload={
+                  handleUserListAndFollowListReload
+                }
+              />
             </div>
           </div>
         )}

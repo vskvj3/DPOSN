@@ -186,7 +186,7 @@ function MainSection() {
   return (
     <div>
       <NewPost />
-
+      {/* Choose Feed Section */}
       <div className="grid grid-flow-col justify-stretch mb-2 bg-primary h-10 rounded-xl shadow-xl">
         <div
           onClick={handleGlobal}

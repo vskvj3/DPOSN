@@ -7,6 +7,7 @@ import ProfileCreation from './pages/ProfileCreation'
 import Pages from './pages/Pages'
 import ProfilePage from './pages/Profile'
 import Cookies from 'js-cookie'
+import RightSideBar from './components/Dashboard/RightSideBar'
 
 function App() {
   useEffect(() => {

@@ -118,8 +118,9 @@ function NewPost() {
               data-max-size="5120"
               accept=".jpg, .png, .jpeg"
             />
-            <BiImages />
-            <span>Image</span>
+            {file ? <BiImages color='blue' /> :  <BiImages />}
+            {file? <span className=' text-blue'>{file.name}</span> : <span>Image</span>}
+            
           </label>
         </div>
         <p className="text-red-700 pb-3">{error}</p>

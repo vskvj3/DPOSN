@@ -12,12 +12,13 @@ import {
   fetchJSONFromIPFS,
 } from '../../utils/PinataUtils'
 
-function RightSideBar() {
+function RightSideBar({ userListAndFollowListReload }) {
   const [followedUsers, setFollowedUsers] = useState([])
   const [selectedUser, setSelectedUser] = useState(null)
   const [chatHistory, setChatHistory] = useState([])
   const [newMessage, setNewMessage] = useState('')
   const [sendingMessage, setSendingMessage] = useState(false)
+  const [chatReload, setChatReload] = useState(false)
   const {
     state: { contract, accounts },
   } = useContext(EthContext)
@@ -26,7 +27,7 @@ function RightSideBar() {
     if (contract != null) {
       fetchFollowedUsers()
     }
-  }, [contract])
+  }, [contract, userListAndFollowListReload])
 
   async function fetchFollowedUsers() {
     try {
@@ -73,9 +74,12 @@ function RightSideBar() {
 
     try {
       setSendingMessage(true)
-      chatHistory.push({ sender: accounts[0], newMessage })
+      const newChatHistory = [
+        ...chatHistory,
+        { sender: accounts[0], newMessage },
+      ]
 
-      const chatCID = await pinJSONToIPFS(chatHistory)
+      const chatCID = await pinJSONToIPFS(newChatHistory)
       console.log(selectedUser._id, chatCID)
       console.log(accounts[0])
       await contract.methods
@@ -84,6 +88,7 @@ function RightSideBar() {
       setNewMessage('')
       loadChatHistory()
       setSendingMessage(false)
+      setChatReload(!chatReload)
     } catch (error) {
       console.error('Error sending message:', error)
       setSendingMessage(false)
@@ -125,7 +130,7 @@ function RightSideBar() {
     if (selectedUser) {
       loadChatHistory()
     }
-  }, [selectedUser])
+  }, [selectedUser, chatReload])
 
   return (
     <div>

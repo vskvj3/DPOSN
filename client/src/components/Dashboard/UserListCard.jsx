@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
-function UserListCard() {
+function UserListCard({ handleUserListAndFollowListReload }) {
   const [allUsersAddress, setAllUsersAddress] = useState([])
   const [users, setUsers] = useState([])
   const {
@@ -78,9 +78,12 @@ function UserListCard() {
       await contract.methods
         .followUser(accounts[0], userAddress)
         .send({ from: accounts[0] })
-      dispatch({ type: 'FOLLOW_USER', payload: userAddress })
-      fetchUsers() // Assuming this function updates the user list after following a user
-      window.location.reload()
+      const newCurrentUserFollowing = [...currentUserFollowing, userAddress]
+      dispatch({
+        type: 'UPDATE_CURRENT_USER_FOLLOWING',
+        data: newCurrentUserFollowing,
+      })
+      handleUserListAndFollowListReload()
     } catch (error) {
       console.error('Error following user:', error.message)
       // Handle the error (e.g., display an error message to the user)

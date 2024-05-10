@@ -10,7 +10,7 @@ import { pinFileToIPFS, pinJSONToIPFS } from '../../utils/PinataUtils'
 
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_PRIVATE_GATEWAY_URL
 
-function NewPost() {
+function NewPost({ handlePostSectionReload }) {
   const [file, setFile] = useState(null)
   const [postText, setPostText] = useState('')
   const [error, setError] = useState('')
@@ -55,6 +55,7 @@ function NewPost() {
     setPostText('')
     setFile(null)
     setPosting(false)
+    handlePostSectionReload()
   }
 
   return (
@@ -118,9 +119,12 @@ function NewPost() {
               data-max-size="5120"
               accept=".jpg, .png, .jpeg"
             />
-            {file ? <BiImages color='blue' /> :  <BiImages />}
-            {file? <span className=' text-blue'>{file.name}</span> : <span>Image</span>}
-            
+            {file ? <BiImages color="blue" /> : <BiImages />}
+            {file ? (
+              <span className=" text-blue">{file.name}</span>
+            ) : (
+              <span>Image</span>
+            )}
           </label>
         </div>
         <p className="text-red-700 pb-3">{error}</p>

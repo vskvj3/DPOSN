@@ -4,18 +4,24 @@ import { Link, useNavigate } from 'react-router-dom'
 
 function LoginPage() {
   const [userName, setUserName] = useState('')
-
+  const [errorMessage, setErrorMessage] = useState(false)
   const navigate = useNavigate()
 
   function handleSubmit(e) {
     e.preventDefault()
 
-    const _userName = userName
-
-    setUserName('')
-    navigate('/profilecreation', {
-      state: { userName: _userName },
-    })
+    if (userName != '') {
+      if (errorMessage === true) {
+        setErrorMessage(false)
+      }
+      const _userName = userName
+      setUserName('')
+      navigate('/profilecreation', {
+        state: { userName: _userName },
+      })
+    } else {
+      setErrorMessage(true)
+    }
   }
 
   function handleChange(e) {
@@ -35,6 +41,9 @@ function LoginPage() {
             <h1 className="mt-8 text-xl">Sign Up</h1>
 
             <form className="flex flex-col w-80 h-64 mt-8 ">
+              {errorMessage && (
+                <p className="text-sm text-red-500 ">Username Required</p>
+              )}
               <input
                 className="h-10 px-3 border-2 border-gray-500 p-2 rounded-md focus:border-teal-500 focus:outline-none"
                 placeholder="Username"

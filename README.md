@@ -16,6 +16,8 @@
 - Truffle
 - Pinata (IPFS Gateway)
 
+For More detailed documentation [Click Here](docs/DESIGN.md)
+
 ## Screenshots:
 ![Sign Up](/images/signup.png "Sign Up") *Sign Up* 
 ![Login Page](/images/login.png "Login Page") *Login Page*
